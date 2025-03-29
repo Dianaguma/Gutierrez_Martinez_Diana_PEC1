@@ -5,7 +5,7 @@ Diana Gutierrez Martínez
 •	Fecha: 29/03/2025
 •	UOC
 
-<span style="color:red">Introducción</span>
+# Introducción
 
 El análisis de datos ómicos se ha vuelto fundamental para entender los procesos biológicos detrás de diversas enfermedades y condiciones físicas. Dado que estos estudios involucran grandes cantidades de datos complejos, como los perfiles de metabolitos en diferentes contextos, es necesario utilizar estructuras de datos sofisticadas que permitan gestionar y analizar la información de manera efectiva. En este sentido, el rol del bioinformático es esencial. Este profesional no solo debe comprender a fondo los datos, sino también interpretar y analizar los metadatos asociados para obtener conclusiones significativas de los estudios. Gracias a su expertise, se pueden extraer resultados valiosos que ayuden a avanzar en el conocimiento de estos procesos biológicos.
 
@@ -158,6 +158,8 @@ Miro tambien la media de cada metabolito y observo que la **Creatinine** tiene e
 # Hago mapa de calor de la correlación entre metabolitos
 
 Instalo el paquete igraph y cargo el paquete. Estableces un umbral (threshold) de 0.7. Este valor se usará para filtrar las correlaciones. Hago una copia de la matriz de correlación original (cor_matrix) y la asigno a una nueva variable llamada cor_matrix_filtered. Modifico **cor_matrix_filtered** estableciendo a cero todas las correlaciones cuya magnitud sea menor que 0.7. Por tanto las correlaciones débiles se eliminan, dejando solo aquellas con correlaciones fuertes (mayores o iguales a 0.7 o menores o iguales a -0.7). Creo un mapa de correlación y guardo ese gráfico en un archivo PNG en mi escritorio. 
+
+![Mapa de calor](https://github.com/Dianaguma/Gutierrez_Martinez_Diana_PEC1/blob/main/heatmap.png)
 
 # Analisis de PCA
 PC1 tiene una desviación estándar significativamente mayor (7.488), por tanto esto indica que representa una gran parte de la variabilidad en los datos. Esto es consistente con la proporción de varianza de 0.890, lo que significa que el PC1 explica el 89% de la variabilidad en los datos.  PC2 tiene una desviación estándar mucho menor (1.6894) y una proporción de varianza de 0.0453, explicando solo el 4.53% de la variabilidad en los datos. La **proporción acumulada** muestra que después de las primeras 10 componentes principales (PC), ya se ha explicado más del 99% de la variabilidad. Por tanto, esto indica que para la mayoría de los análisis, podrías trabajar con solo las primeras 2-3 componentes y aún así capturar casi toda la variabilidad en los datos.
