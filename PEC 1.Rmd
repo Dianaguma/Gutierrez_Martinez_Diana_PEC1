@@ -9,7 +9,7 @@ install.packages("usethis")
 library(usethis)
 
 # Configurar GitHub remoto (opcional, solo si es necesario para tu proyecto)
-use_git_remote(url = "https://github.com/Dianaguma/Gutierrez_Mart-nez-_Diana_PEC1", overwrite = TRUE)
+use_git_remote(url = "https://github.com/Dianaguma/Gutierrez_Martinez_Diana_PEC1", overwrite = TRUE)
 
 # Seleccionar un mirror de CRAN
 chooseCRANmirror(graphics = FALSE, ind = 1)
