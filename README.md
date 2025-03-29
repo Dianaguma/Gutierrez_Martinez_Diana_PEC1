@@ -5,7 +5,7 @@ Diana Gutierrez Martínez
 •	Fecha: 29/03/2025
 •	UOC
 
-# Introducción 
+<span style="color:green">Introducción .</span>
 
 El análisis de datos ómicos se ha vuelto fundamental para entender los procesos biológicos detrás de diversas enfermedades y condiciones físicas. Dado que estos estudios involucran grandes cantidades de datos complejos, como los perfiles de metabolitos en diferentes contextos, es necesario utilizar estructuras de datos sofisticadas que permitan gestionar y analizar la información de manera efectiva. En este sentido, el rol del bioinformático es esencial. Este profesional no solo debe comprender a fondo los datos, sino también interpretar y analizar los metadatos asociados para obtener conclusiones significativas de los estudios. Gracias a su expertise, se pueden extraer resultados valiosos que ayuden a avanzar en el conocimiento de estos procesos biológicos.
 
@@ -140,7 +140,7 @@ Al hacer un  **summary(assays(se)$counts)** Si nos enfocamos en los resultados d
 
 Observo que los ácidos como el **succinato**, el **oxoglutarato** y el **ácido acético** tienen fuertes correlaciones entre ellos. Se que están involucrados en las rutas metabólicas relacionadas con el ciclo de Krebs, lo que indica una estrecha relación en la producción de energía.
 
-En cambio la **acetona**, el **ácido acético**, y el **ácido adipato** tienen correlaciones significativas, sabemos que se relacionan entre si porque son metabolitos conectados con la utilización de grasas o la producción de cuerpos cetónicos, cuando estamos en ayuno o metabolismo alterado.
+En cambio la **acetona**, el **ácido acético**, y el **ácido adipato** tienen correlaciones significativas, sabemos que se relacionan entre si porque son metabolitos conectados con la utilización de grasas o la producción de cuerpos cetónicos, cuando estamos en ayuno o metabolismo alterado. 
 
 La **glutamina**, la **alanina**, la **leucina**, la **serina** y la **valina** tienen relaciones entre sí, son importantes para el metabolismo celular y en la síntesis de proteínas. La **Glutamina** también es relevante en el metabolismo muscular y la respuesta inmunológica. Una menor concentración de glutamina (337.0968) podría estar relacionada con un estado de catabolismo muscular, común en la cachexia.
 
@@ -159,22 +159,6 @@ Miro tambien la media de cada metabolito y observo que la **Creatinine** tiene e
 
 Instalo el paquete igraph y cargo el paquete. Estableces un umbral (threshold) de 0.7. Este valor se usará para filtrar las correlaciones. Hago una copia de la matriz de correlación original (cor_matrix) y la asigno a una nueva variable llamada cor_matrix_filtered. Modifico **cor_matrix_filtered** estableciendo a cero todas las correlaciones cuya magnitud sea menor que 0.7. Por tanto las correlaciones débiles se eliminan, dejando solo aquellas con correlaciones fuertes (mayores o iguales a 0.7 o menores o iguales a -0.7). Creo un mapa de correlación y guardo ese gráfico en un archivo PNG en mi escritorio. 
 
-# Interpretación de Resultados desde el Punto de Vista Biológico y hallazgos más importantes. Explicación de cómo las diferentes concentraciones de metabolitos pueden ser indicativas de la condición clínica de los pacientes.
-
-El **Oxoglutarato**, **succinato**, y **acetato**: Son metabolitos involucrados en el ciclo de Krebs, importantes en la producción de energía a nivel celular. Sabemos que en la caquexia, se observa una disfunción del metabolismo energético, alterando la utilización de energía y la producción de ATP. Por tanto si vemos niveles elevados o alterados de estos metabolitos nos puede indicar que el cuerpo está intentando adaptarse a un estado de energía reducido. Esto ocurre en la caquexia, debido a la desregulación en el metabolismo de los carbohidratos, las grasas y las proteínas.
-
-la **acetona**: En situaciones de caquexia, puede haber una mayor utilización de los cuerpos cetónicos para la producción de energía debido a la disminución de los carbohidratos disponibles, y la acetona es uno de esos productos. La acumulación de cetonas podría reflejar un cambio hacia la utilización de las grasas para obtener energía y esto es lo que ocurre en la caquexia.
-
-# Resultados clave: relación entre los metabolitos y la pérdida de masa muscular (muscle loss).
-
-Aminoácidos como la alanina, glutamina, leucina y valina: En la caquexia, la pérdida de masa muscular se asocia con un catabolismo aumentado de las proteínas, lo que libera aminoácidos.
-
-La glutamina juega un papel fundamental en el metabolismo celular y en el mantenimiento de la función inmune, pero también es un indicador de la degradación muscular. La correlación de la glutamina con otros metabolitos podría reflejar un intento del cuerpo de compensar la pérdida muscular y la alteración del metabolismo energético.
-
-La alanina es un aminoácido que se produce durante la glucólisis y tiene un papel crucial en el transporte de energía entre los músculos y el hígado, y sus niveles elevados en condiciones de caquexia podrían reflejar un metabolismo alterado de proteínas y glucosa.
-
-La leucina es un aminoácido esencial que está involucrado en la síntesis de proteínas musculares, y su correlación con otros metabolitos podría estar indicando intentos del cuerpo por estimular la síntesis proteica para contrarrestar la pérdida de masa muscular.
-
 # Analisis de PCA
 PC1 tiene una desviación estándar significativamente mayor (7.488), por tanto esto indica que representa una gran parte de la variabilidad en los datos. Esto es consistente con la proporción de varianza de 0.890, lo que significa que el PC1 explica el 89% de la variabilidad en los datos.  PC2 tiene una desviación estándar mucho menor (1.6894) y una proporción de varianza de 0.0453, explicando solo el 4.53% de la variabilidad en los datos. La **proporción acumulada** muestra que después de las primeras 10 componentes principales (PC), ya se ha explicado más del 99% de la variabilidad. Por tanto, esto indica que para la mayoría de los análisis, podrías trabajar con solo las primeras 2-3 componentes y aún así capturar casi toda la variabilidad en los datos.
 
@@ -184,6 +168,12 @@ PC1 tiene una desviación estándar significativamente mayor (7.488), por tanto 
 Los resultados de las correlaciones metabólicas sugieren varias formas en las que el síndrome de caquexia puede estar relacionado con alteraciones en el metabolismo energético, la descomposición de proteínas, la inflamación sistémica y la disfunción de las vías de señalización celular. Los metabolitos observados en este análisis están directamente involucrados en las vías que se alteran en la caquexia, lo que indica que los cambios metabólicos descritos podrían ser indicativos de los procesos subyacentes a la pérdida de masa muscular, la fatiga, la alteración de los procesos energéticos y el aumento de la inflamación crónica.
 
 El entendimiento de cómo estos metabolitos interactúan entre sí podría ayudar en el diseño de estrategias terapéuticas para tratar o mitigar los efectos de la caquexia en pacientes con enfermedades crónicas.
+
+El **Oxoglutarato**, **succinato**, y **acetato**: Son metabolitos involucrados en el ciclo de Krebs, importantes en la producción de energía a nivel celular. Sabemos que en la caquexia, se observa una disfunción del metabolismo energético, alterando la utilización de energía y la producción de ATP. Por tanto si vemos niveles elevados o alterados de estos metabolitos nos puede indicar que el cuerpo está intentando adaptarse a un estado de energía reducido. Esto ocurre en la caquexia, debido a la desregulación en el metabolismo de los carbohidratos, las grasas y las proteínas.
+
+la **acetona**: En situaciones de caquexia, puede haber una mayor utilización de los cuerpos cetónicos para la producción de energía debido a la disminución de los carbohidratos disponibles, y la acetona es uno de esos productos. La acumulación de cetonas podría reflejar un cambio hacia la utilización de las grasas para obtener energía y esto es lo que ocurre en la caquexia.
+
+Aminoácidos como la alanina, glutamina, leucina y valina: En la caquexia, la pérdida de masa muscular se asocia con un catabolismo aumentado de las proteínas, lo que libera aminoácidos. La glutamina juega un papel fundamental en el metabolismo celular y en el mantenimiento de la función inmune, pero también es un indicador de la degradación muscular. La correlación de la glutamina con otros metabolitos podría reflejar un intento del cuerpo de compensar la pérdida muscular y la alteración del metabolismo energético. La alanina es un aminoácido que se produce durante la glucólisis y tiene un papel crucial en el transporte de energía entre los músculos y el hígado, y sus niveles elevados en condiciones de caquexia podrían reflejar un metabolismo alterado de proteínas y glucosa. La leucina es un aminoácido esencial que está involucrado en la síntesis de proteínas musculares, y su correlación con otros metabolitos podría estar indicando intentos del cuerpo por estimular la síntesis proteica para contrarrestar la pérdida de masa muscular.
 
 # Reflexiones sobre las limitaciones del análisis y posibles estudios futuros.
 
