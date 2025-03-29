@@ -4,12 +4,13 @@ author: "Diana Gutierrez Martínez"
 date: "2025-03-26"
 ---
 ```{r}
+```{r}
 # Cargar las librerías necesarias
 install.packages("usethis")
 library(usethis)
 
 # Configurar GitHub remoto (opcional, solo si es necesario para tu proyecto)
-use_git_remote(url = "https://github.com/Dianaguma/Gutierrez_Martinez_Diana_PEC1", overwrite = TRUE)
+use_git_remote(url = "https://github.com/Dianaguma/Gutierrez_Mart-nez-_Diana_PEC1", overwrite = TRUE)
 
 # Seleccionar un mirror de CRAN
 chooseCRANmirror(graphics = FALSE, ind = 1)
@@ -131,42 +132,100 @@ colnames(assays(se)$counts) # nombres de los metabolitos (columnas de los ensayo
 
 se$`Muscle loss`
 
+summary(assays(se)$counts) # puedo ver como actua los metabolitos. Me enfoco en el citrato y la creatinina que los veo muy elevados. Median del citrato:2079.74 . Median creatinine: 8350. 
+
+apply(assays(se)$counts, 2, mean)  # Promedio de cada metabolito . Me enfoco en el citrato y la creatinina que los veo muy elevados. Median del citrato:2079.74 . Median creatinine: 8350. 
+
+# Miro las desviaciones estandar por cada metabolito
+
+sd_per_metabolite <- apply(assays(se)$counts, 2, sd)
+
+print(sd_per_metabolite)
+
+# El citrato tiene: 2317.814577  y la creatinina tiene: 297.054442
+
+# Filtro datos de metabolitos con poca variabilidad 
+
+metabolite_sd <- apply(assays(se)$counts, 2, sd)
+
+se <- se[, metabolite_sd > 0.1]  # Mantén metabolitos con SD mayor a 0.1
+
+
 # Vamos a hacer analisis gráficos 
 
 install.packages("ggplot2")     # Para visualización
 install.packages("dplyr")       # Para manipulación de datos
 install.packages("patchwork")   # Para combinar gráficos
 install.packages("GGally")      # Para análisis de correlación
+install.packages("tidyr")
 
-# Cargar librerías necesarias
+# Cargar las librerías necesarias
+
+library(SummarizedExperiment)
+library(reshape2)
 library(ggplot2)
+
 library(tidyr)
 
-# Calcular la correlación entre los metabolitos
+# Extraer los datos de los metabolitos del objeto SummarizedExperiment (se)
+metabolite_data <- assay(se)  # Asegúrate de que 'se' es un objeto de clase SummarizedExperiment
 
-cor_matrix <- cor(data_matrix, use = "pairwise.complete.obs")
+# Calcular la matriz de correlación entre los metabolitos
+cor_matrix <- cor(metabolite_data)
 
 print(cor_matrix)
 
-# Visualizar la matriz de correlación
 library(reshape2)
-
-# Convertir la matriz de correlación a formato largo
 cor_data <- melt(cor_matrix)
 
-
-# Mapa de calor de la correlación entre metabolitos
+# Crear el mapa de calor de la correlación entre metabolitos usando ggplot2
 ggplot(cor_data, aes(Var1, Var2, fill = value)) +
   geom_tile() +
   scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
                        midpoint = 0, limit = c(-1, 1), space = "Lab", 
                        name = "Correlación") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, 
-                                   hjust = 1)) +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +
   labs(title = "Mapa de calor de la correlación entre metabolitos",
        x = "Metabolito", 
        y = "Metabolito")
+
+
+ggsave("C:/Users/merma/OneDrive/Escritorio/heatmap.png")
+
+# El heatmap se a adjuntado al GitHub para poderlo descargar si es necesario. 
+
+# PCA (Análisis de Componentes Principales) : Así hago exploración y visualizo la variabilidad de los datos:
+
+pca_result <- prcomp(t(assays(se)$counts), scale = TRUE)
+summary(pca_result)  # Resumen de las componentes principales
+
+  
+# PC1 tiene una sd  7.488
+
+loadings <- pca_result$rotation
+
+head(loadings)
+
+# Las proyecciones de las muestras en cada componente principal (PC)
+pca_scores <- pca_result$x
+
+head(pca_scores)
+
+# Convertir las proyecciones PCA a un data frame para la visualización
+pca_scores_df <- data.frame(pca_scores)
+
+# Graficar los primeros dos componentes principales (PC1 vs PC2)
+library(ggplot2)
+ggplot(pca_scores_df, aes(x = PC1, y = PC2)) +
+  geom_point() +
+  labs(title = "PCA: PC1 vs PC2", x = "PC1", y = "PC2") +
+  theme_minimal()
+
+directorio <- "C:/Users/merma/OneDrive/Escritorio/MASTER BIOINFORMATICA/analisis de datos omicos/Gutiérrez -Martínez -Diana-PEC1"
+
+write.csv(pca_scores_df, file = paste0(directorio, "/pca_scores.csv"))
+
 
 
 ```
