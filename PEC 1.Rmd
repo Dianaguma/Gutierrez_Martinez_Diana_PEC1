@@ -193,9 +193,33 @@ ggsave("C:/Users/merma/OneDrive/Escritorio/varianza_explicada.png", width = 10, 
 # Exportar los resultados del PCA a un archivo CSV
 write.csv(pca_scores_df, file = "C:/Users/merma/OneDrive/Escritorio/pca_scores.csv")
 
+#Puedo mirar rutas metabolicas
+
+# Instalar paquetes para KEGG
+BiocManager::install("KEGGREST")
+
+install.packages("igraph")  # Instalar el paquete
+library(igraph)  # Cargar el paquete
+
+
+# Definir los umbrales de correlación
+threshold <- 0.7
+cor_matrix_filtered <- cor_matrix
+cor_matrix_filtered[abs(cor_matrix_filtered) < threshold] <- 0
+
+# Crear un grafico de la matriz de correlación
+g <- graph_from_adjacency_matrix(cor_matrix_filtered, weighted = TRUE, mode = "undirected")
+plot(g, vertex.label = rownames(cor_matrix), vertex.size = 5, edge.width = E(g)$weight * 5)
+
+png("C:/Users/merma/OneDrive/Escritorio/grafico_correlacion.png", width = 800, height = 800)
+plot(g, vertex.label = rownames(cor_matrix_filtered), vertex.size = 5, edge.width = E(g)$weight * 5)
+dev.off() 
+
 ```
+
 ![Heatmap](C:/Users/merma/OneDrive/Escritorio/heatmap.png)
 ![Varianza explicada](C:/Users/merma/OneDrive/Escritorio/varianza_explicada.png)
+![Varianza explicada](C:/Users/merma/OneDrive/Escritorio/grafico_correlacion.png)
 
 Promedio de concentraciones de metabolitos (ordenados de mayor a menor): Aqui observamos la Creatinina y el citrato con valores altos, como tambien el hipurato. 
 
