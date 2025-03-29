@@ -79,17 +79,70 @@ Nombres de las columnas (colnames(63)): Las columnas corresponden a los **metabo
 
 Datos de las columnas (colData names(2): Patient ID, Muscle loss): El **slot colData** contiene dos columnas: Patient ID: El identificador de cada paciente. Muscle loss: El grado de pérdida de masa muscular para cada paciente. Este es el factor principal en el estudio de la caquexia, por lo que este dato es esencial para cualquier análisis correlacionando los metabolitos con la severidad de la enfermedad.
 
-# Análisis Exploratorio de los Datos (2-3 páginas)
+# Análisis Exploratorio de los Datos 
 
-•	Estadísticas descriptivas: análisis inicial para obtener una visión general del dataset.
-•	Distribución de las variables:
-o	Muscle loss: visualización de la distribución de pacientes según el grado de pérdida muscular.
-o	Metabolitos: gráficas para identificar la variabilidad de los metabolitos entre pacientes.
-•	Visualización de datos:
-o	Gráficos de barras o boxplots que comparen los niveles de metabolitos entre pacientes con diferentes grados de caquexia.
+**Estadísticas descriptivas: análisis inicial para obtener una visión general del dataset.**
+Podemos hacer un analisis inicial para poder ver una vision general de los datos entrando directamente al archivo rda. Y con el codigo: 
+colData(se) # Vemos que efectivamente estan las dos variables Patient ID y Muscle loss y nos sale los metabolitos relacionados a la cachexia y a este proyecto. 
+                    DataFrame with 63 rows and 2 columns
+                                                 Patient ID Muscle loss
+                                                <character>    <factor>
+                    1,6-Anhydro-beta-D-glucose      PIF_178    cachexic
+                    1-Methylnicotinamide            PIF_087    cachexic
+                    2-Aminobutyrate                 PIF_090    cachexic
+                    2-Hydroxyisobutyrate        NETL_005_V1    cachexic
+                    2-Oxoglutarate                  PIF_115    cachexic
+                    ...                                 ...         ...
+                    cis-Aconitate              NETCR_005_V1     control
+                    myo-Inositol                    PIF_111     control
+                    trans-Aconitate                 PIF_171     control
+                    pi-Methylhistidine         NETCR_008_V1     control
+                    tau-Methylhistidine        NETCR_008_V2     control
+Podemos ver el resumen de metadatos en columna
+colnames(assays(se)$counts)
+[1] "1,6-Anhydro-beta-D-glucose" "1-Methylnicotinamide"       "2-Aminobutyrate"           
+ [4] "2-Hydroxyisobutyrate"       "2-Oxoglutarate"             "3-Aminoisobutyrate"        
+ [7] "3-Hydroxybutyrate"          "3-Hydroxyisovalerate"       "3-Indoxylsulfate"          
+[10] "4-Hydroxyphenylacetate"     "Acetate"                    "Acetone"                   
+[13] "Adipate"                    "Alanine"                    "Asparagine"                
+[16] "Betaine"                    "Carnitine"                  "Citrate"                   
+[19] "Creatine"                   "Creatinine"                 "Dimethylamine"             
+[22] "Ethanolamine"               "Formate"                    "Fucose"                    
+[25] "Fumarate"                   "Glucose"                    "Glutamine"                 
+[28] "Glycine"                    "Glycolate"                  "Guanidoacetate"            
+[31] "Hippurate"                  "Histidine"                  "Hypoxanthine"              
+[34] "Isoleucine"                 "Lactate"                    "Leucine"                   
+[37] "Lysine"                     "Methylamine"                "Methylguanidine"           
+[40] "N,N-Dimethylglycine"        "O-Acetylcarnitine"          "Pantothenate"              
+[43] "Pyroglutamate"              "Pyruvate"                   "Quinolinate"               
+[46] "Serine"                     "Succinate"                  "Sucrose"                   
+[49] "Tartrate"                   "Taurine"                    "Threonine"                 
+[52] "Trigonelline"               "Trimethylamine N-oxide"     "Tryptophan"                
+[55] "Tyrosine"                   "Uracil"                     "Valine"                    
+[58] "Xylose"                     "cis-Aconitate"              "myo-Inositol"              
+[61] "trans-Aconitate"            "pi-Methylhistidine"         "tau-Methylhistidine"   
+
+Miramos las condiciones de cada paciente relacionadas a la massa muscular : 
+ se$`Muscle loss`
+ [1] cachexic cachexic cachexic cachexic cachexic cachexic cachexic cachexic cachexic cachexic
+[11] cachexic cachexic cachexic cachexic cachexic cachexic cachexic cachexic cachexic cachexic
+[21] cachexic cachexic cachexic cachexic cachexic cachexic cachexic cachexic cachexic cachexic
+[31] cachexic cachexic cachexic cachexic cachexic cachexic cachexic cachexic cachexic cachexic
+[41] cachexic cachexic cachexic cachexic cachexic cachexic cachexic control  control  control 
+[51] control  control  control  control  control  control  control  control  control  control 
+[61] control  control  control 
+Levels: cachexic control
+
+# Primero calculo la corrección entre los metabolitos 
+Observo que 
+
+# Hago mapa de calor de la correlación entre metabolitos
+
+
 o	Posible uso de PCA (análisis de componentes principales) para observar agrupamientos entre pacientes.
 •  Interpretación de Resultados desde el Punto de Vista Biológico (2-3 páginas)
-•	Resultados clave: relación entre los metabolitos y la pérdida de masa muscular (muscle loss).
+
+# Resultados clave: relación entre los metabolitos y la pérdida de masa muscular (muscle loss).
 •	Agrupamiento de pacientes: explicación de cómo las diferentes concentraciones de metabolitos pueden ser indicativas de la condición clínica de los pacientes.
 •	Posibles implicaciones biológicas: cómo el análisis puede contribuir al entendimiento de la caquexia en humanos y el papel de los metabolitos en el proceso.
 •  Conclusiones (0.5-1 página)
