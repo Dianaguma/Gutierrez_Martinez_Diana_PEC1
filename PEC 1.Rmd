@@ -2,11 +2,6 @@
 title: "PEC 1 Diana_Gutiérrez"
 author: "Diana Gutierrez Martínez"
 date: "2025-03-26"
-output:
-  word_document: default
-  html_document:
-    df_print: paged
-  pdf_document: default
 ---
 
 # Instalar y cargar los paquetes necesarios
@@ -18,7 +13,7 @@ install.packages("usethis")
 
 library(usethis)
 
-use_git_remote(url = "https://github.com/Dianaguma/PEC1", overwrite = TRUE)
+use_git_remote(url = "https://github.com/Dianaguma/Gutierrez_Martinez_Diana_PEC1", overwrite = TRUE)
 
 
 chooseCRANmirror(graphics = FALSE, ind = 1)
