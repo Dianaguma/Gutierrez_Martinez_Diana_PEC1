@@ -3,47 +3,36 @@ title: "PEC 1 Diana_Gutiérrez"
 author: "Diana Gutierrez Martínez"
 date: "2025-03-26"
 ---
-
-# Instalar y cargar los paquetes necesarios
-
-```{r}
 # Cargar las librerías necesarias
-
 install.packages("usethis")
-
 library(usethis)
 
-use_git_remote(url = "https://github.com/Dianaguma/Gutierrez_Martinez_Diana_PEC1", overwrite = TRUE)
+# Configurar GitHub remoto (opcional, solo si es necesario para tu proyecto)
+use_git_remote(url = "https://github.com/Dianaguma/Gutierrez_Mart-nez-_Diana_PEC1", overwrite = TRUE)
 
-
+# Seleccionar un mirror de CRAN
 chooseCRANmirror(graphics = FALSE, ind = 1)
 
+# Instalar y cargar BiocManager para paquetes de Bioconductor
 install.packages("BiocManager")
 BiocManager::install("SummarizedExperiment")
 
+# Instalar y cargar readr para manejo de archivos CSV
 install.packages("readr")
-
 library(SummarizedExperiment)
 library(readr)
 
-# Leer el archivo CSV
+# Leer el archivo CSV con la ruta completa
 data <- read.csv("C:/Users/merma/OneDrive/Escritorio/MASTER BIOINFORMATICA/analisis de datos omicos/Gutiérrez -Martínez -Diana-PEC1/human_cachexia.csv")
 
-# Visualizar los primeros registros
-View(data)
-
 # Separar los metadatos (por ejemplo, Patient ID y Muscle loss)
-sample_data <- data[, c("Patient ID", "Muscle loss")]
-
-# Reemplazar espacios en los nombres de las columnas por guiones bajos
-colnames(sample_data) <- gsub(" ", "_", colnames(sample_data))
+sample_data <- data[, c("Patient.ID", "Muscle.loss")]
 
 # Convertir "Muscle_loss" en factor
-sample_data$Muscle_loss <- factor(sample_data$Muscle_loss)
+sample_data$Muscle.loss <- factor(sample_data$Muscle.loss)
 
-# Verificar si hay NA en los metadatos
-sample_data <- sample_data[!is.na(sample_data$Patient_ID), ]  # Eliminar filas sin Patient_ID
-sample_data <- sample_data[!is.na(sample_data$Muscle_loss), ]  # Eliminar filas sin Muscle_loss
+# Eliminar filas con NA en los metadatos
+sample_data <- sample_data[complete.cases(sample_data), ]
 
 # Separar los datos experimentales (mediciones de metabolitos)
 exp_data <- data[, -(1:2)]  # Eliminamos las primeras dos columnas (metadatos)
@@ -51,26 +40,55 @@ exp_data <- data[, -(1:2)]  # Eliminamos las primeras dos columnas (metadatos)
 # Convertir los datos experimentales a matriz
 data_matrix <- as.matrix(exp_data)
 
-# Ajustar data_matrix al número de pacientes restantes en sample_data
-data_matrix <- data_matrix[1:nrow(sample_data), ]
+print(data_matrix)
 
-# Establecer nombres de filas y columnas en la matriz
-rownames(data_matrix) <- sample_data$Patient_ID
-colnames(data_matrix) <- colnames(exp_data)
+# matriz o conjunto de datos que lista varios metabolitos o compuestos bioquímicos junto con sus concentraciones correspondientes. Cada fila representa una muestra, y cada columna corresponde a un metabolito diferente. Los valores en la tabla representan los niveles de concentración de cada metabolito en cada muestra. El conjunto de datos parece contener muchos metabolitos involucrados en diferentes vías metabólicas, como aminoácidos, ácidos orgánicos y otros compuestos bioquímicos. Estos compuestos pueden ser importantes para estudios relacionados con el metabolismo, la bioquímica o cualquier área donde el perfil metabólico sea relevante.
 
-# Verificar duplicados en Patient_ID
-duplicated_IDs <- anyDuplicated(sample_data$Patient_ID)
-
-# Si hay duplicados, elimina las filas duplicadas
-if (duplicated_IDs > 0) {
-  sample_data <- sample_data[!duplicated(sample_data$Patient_ID), ]
-  data_matrix <- data_matrix[rownames(data_matrix) %in% sample_data$Patient_ID, ]
+# Verificar que los nombres de fila están vacíos o incorrectos
+if (is.null(rownames(data_matrix)) || length(rownames(data_matrix)) == 0) {
+  cat("Asignando los nombres de fila a data_matrix...\n")
+  
+  # Comprobamos que los IDs en sample_data coinciden con las filas de data_matrix
+  if (length(sample_data$Patient.ID) == nrow(data_matrix)) {
+    rownames(data_matrix) <- sample_data$Patient.ID
+  } else {
+    stop("El número de filas en sample_data no coincide con el número de filas en data_matrix.")
+  }
 }
 
-# Verificar que las dimensiones coincidan
-if (nrow(data_matrix) != nrow(sample_data)) {
-  stop("El número de filas en la matriz de datos y en los metadatos no coincide")
+# Verificar los nombres de las filas
+cat("Comprobando los nombres de fila...\n")
+print(head(rownames(data_matrix)))  # Muestra los primeros nombres de fila
+
+# Verificar si hay duplicados en Patient.ID y eliminarlos
+sample_data <- sample_data[!duplicated(sample_data$Patient.ID), ]
+data_matrix <- data_matrix[!duplicated(rownames(data_matrix)), ]
+
+# Asegurar que solo se mantienen IDs comunes entre sample_data y data_matrix
+common_ids <- intersect(sample_data$Patient.ID, rownames(data_matrix))
+
+# Filtrar ambas estructuras para mantener solo las IDs en común
+sample_data <- sample_data[sample_data$Patient.ID %in% common_ids, ]
+data_matrix <- data_matrix[rownames(data_matrix) %in% common_ids, ]
+
+# Asegurar que las filas en data_matrix y sample_data están alineadas
+cat("Alineando filas de data_matrix y sample_data...\n")
+
+# Usamos match para encontrar las filas en el orden correcto
+order_indices <- match(sample_data$Patient.ID, rownames(data_matrix))
+
+# Verificar si todos los IDs de sample_data están presentes en rownames(data_matrix)
+if (any(is.na(order_indices))) {
+  cat("Advertencia: Algunos Patient.ID de sample_data no están presentes en rownames(data_matrix).\n")
 }
+
+# Reordenar ambas estructuras según el índice obtenido con match
+data_matrix <- data_matrix[order_indices, ]
+sample_data <- sample_data[order_indices, ]
+
+# Verificar nuevamente las dimensiones
+cat("Dimensiones de sample_data:", dim(sample_data), "\n")
+cat("Dimensiones de data_matrix:", dim(data_matrix), "\n")
 
 # Crear el objeto SummarizedExperiment
 se <- SummarizedExperiment(
@@ -80,6 +98,21 @@ se <- SummarizedExperiment(
 
 # Ver el objeto SummarizedExperiment
 se
+
+
+# Resultado al mostrar el summarizedExperiment: 
+# class: SummarizedExperiment 
+#dim: 63 63 
+#metadata(0):
+#assays(1): counts
+#rownames(63): PIF_178 PIF_087 ... NETCR_008_V1 NETCR_008_V2
+#rowData names(1): MuscleLoss
+#colnames(63): 1,6-Anhydro-beta-D-glucose 1-Methylnicotinamide ...
+#  pi-Methylhistidine tau-Methylhistidine
+#colData names(2): Patient ID Muscle loss
+
+save(se, file = "C:/Users/merma/OneDrive/Escritorio/MASTER BIOINFORMATICA/analisis de datos omicos/Gutiérrez -Martínez -Diana-PEC1/SummarizedExperiment_Diana_Gutiérrez.rda")
+
 
 # 3. Llevad a cabo un análisis exploratorio que os proporcione una visión general del dataset en la línea de lo que hemos visto en las actividades de este reto
 
@@ -118,35 +151,4 @@ ggplot(cor_data, aes(Var1, Var2, fill = value)) +
 
 
 ```
-La clase SummarizedExperiment es una extensión de ExpressionSet, utilizada por muchas aplicaciones y bases de datos (como es el caso de metabolomicsWorkbench). ¿Cuáles son sus principales diferencias con la clase ExpressionSet?
-
-Son ** estructuras de datos comunes en el análisis de datos ómicos, por tanto de alto rendimiento. Las dos manejan datos de matriz como expresiones géneticas o metabolitos, metadatos. Pero hay diferencias: 
-
-** ExpressionSet: **
-
-- \textcolor{red}{1} **phenoData** Se usa para almacenar **metadatos** de las muestras (fenotipos) - \textcolor{red}{2} **featureData** Se usa para almacenar **metadatos** de las características (por ejemplo, genes).
-- Los metadatos están **encapsulados** en objetos de la clase AnnotatedDataFrame, así que tiene menos flexibilidad en comparación con las clases más modernas de metadatos como DataFrame de Bioconductor.
-- Está más orientado hacia el análisis de expresión génica, especialmente para microarrays.
-
-** SummarizedExperiment:**
-
-- \textcolor{red}{1} Utiliza **colData** para los metadatos de las muestras (equivalente a phenoData) y **rowData** para los metadatos de las características (equivalente a featureData).
-
-- \textcolor{red}{2}Los metadatos se almacenan como objetos **DataFrame de Bioconductor**, así que son más flexibles y ofrecen una mayor integración con otros paquetes de Bioconductor y R en general.
-
-- \textcolor{red}{3} Maneja metadatos de manera más directa y con mejor soporte para nombres y alineación de filas y columnas.
-
-- Diseñado para RNA-Seq, proteómica, metabolómica, etc.
-
-Es compatible con paquetes de análisis de datos de secuenciación de última generación, como DESeq2 y edgeR, que requieren o recomiendan el uso de objetos SummarizedExperiment.
-
-- Sé puede trabajar con varias representaciones de los datos en paralelo, como datos crudos y normalizados.
-
-- Es la clase recomendada para nuevos desarrollos y análisis de datos ómicos en Bioconductor.
-
-- paquetes modernos de Bioconductor, como MultiAssayExperiment y DESeq2 están diseñados para trabajar directamente con objetos SummarizedExperiment.
-
-# 3. Llevad a cabo un análisis exploratorio que os proporcione una visión general del dataset en la línea de lo que hemos visto en las actividades de este reto
-
-
 
