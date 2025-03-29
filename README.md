@@ -148,6 +148,8 @@ El **ácido pantoténico**, el **acetato** y el **nicotinamida** son coenzimas e
 
 Finalmente, el **ácido fenilacético** y el **indoxilsulfato** muestran correlaciones entre sí, creo que están involucrados en procesos antioxidantes y de detoxificación. Y son importantes en el metabolismo de los fenoles. 
 
+Miro tambien la media de cada metabolito y observo que la Creatinine tiene el valor más alto de concentración entre los metabolitos estudiados, con **9521.7754**, seguido por Hippurate **2614.1479** y Citrate **2423.4689**. Esto sugiere que la creatinina podría ser uno de los metabolitos más presentes en las muestras que estás analizando. 
+
 # Hago mapa de calor de la correlación entre metabolitos
 
 # Interpretación de Resultados desde el Punto de Vista Biológico y hallazgos más importantes. Explicación de cómo las diferentes concentraciones de metabolitos pueden ser indicativas de la condición clínica de los pacientes.
