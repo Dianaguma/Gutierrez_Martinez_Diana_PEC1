@@ -142,15 +142,22 @@ Observo que los ácidos como el **succinato**, el **oxoglutarato** y el **ácido
 
 En cambio la **acetona**, el **ácido acético**, y el **ácido adipato** tienen correlaciones significativas, sabemos que se relacionan entre si porque son metabolitos conectados con la utilización de grasas o la producción de cuerpos cetónicos, cuando estamos en ayuno o metabolismo alterado.
 
-La **glutamina**, la **alanina**, la **leucina**, la **serina** y la **valina** tienen relaciones entre sí, son importantes para el metabolismo celular y en la síntesis de proteínas. 
+La **glutamina**, la **alanina**, la **leucina**, la **serina** y la **valina** tienen relaciones entre sí, son importantes para el metabolismo celular y en la síntesis de proteínas. La **Glutamina** también es relevante en el metabolismo muscular y la respuesta inmunológica. Una menor concentración de glutamina (337.0968) podría estar relacionada con un estado de catabolismo muscular, común en la cachexia.
 
 El **ácido pantoténico**, el **acetato** y el **nicotinamida** son coenzimas esenciales en las vías metabólicas, sobretodo en la producción de energía. 
 
-Finalmente, el **ácido fenilacético** y el **indoxilsulfato** muestran correlaciones entre sí, creo que están involucrados en procesos antioxidantes y de detoxificación. Y son importantes en el metabolismo de los fenoles. 
+Finalmente, el **ácido fenilacético** y el **indoxilsulfato** muestran correlaciones entre sí, creo que están involucrados en procesos antioxidantes y de detoxificación. Y son importantes en el metabolismo de los fenoles.
 
-Miro tambien la media de cada metabolito y observo que la Creatinine tiene el valor más alto de concentración entre los metabolitos estudiados, con **9521.7754**, seguido por Hippurate **2614.1479** y Citrate **2423.4689**. Esto sugiere que la creatinina podría ser uno de los metabolitos más presentes en las muestras que estás analizando. 
+**Glucose** es un indicador importante del metabolismo energético. Su concentración más baja podría reflejar cambios en el uso de energía o el metabolismo de carbohidratos en pacientes con cachexia.
+
+# Calculo la media de los metabolitos. 
+
+Miro tambien la media de cada metabolito y observo que la **Creatinine** tiene el valor más alto de concentración entre los metabolitos estudiados, con **9521.7754**, seguido por Hippurate **2614.1479** y Citrate **2423.4689**. La creatinina podría ser uno de los metabolitos más presentes en las muestras que estás analizando. Este es un subproducto del metabolismo muscular, y ver valores elevados se han visto relacionados con la función renal y el estado muscular. Como el análisis parece estar centrado en la cachexia, la creatinina podría ser relevante para evaluar el daño muscular y la degradación proteica. El  **pi-Methylhistidine** es un marcador de degradación muscular y está presente en niveles moderados (391.5184), es importante analizar este marcador porque es relevante en pacientes cachexicos, ya que la degradación muscular es un proceso clave en esta condición. 
+
 
 # Hago mapa de calor de la correlación entre metabolitos
+
+Instalo el paquete igraph y cargo el paquete. Estableces un umbral (threshold) de 0.7. Este valor se usará para filtrar las correlaciones. Hago una copia de la matriz de correlación original (cor_matrix) y la asigno a una nueva variable llamada cor_matrix_filtered. Modifico **cor_matrix_filtered** estableciendo a cero todas las correlaciones cuya magnitud sea menor que 0.7. Por tanto las correlaciones débiles se eliminan, dejando solo aquellas con correlaciones fuertes (mayores o iguales a 0.7 o menores o iguales a -0.7). Creo un mapa de correlación y guardo ese gráfico en un archivo PNG en mi escritorio. 
 
 # Interpretación de Resultados desde el Punto de Vista Biológico y hallazgos más importantes. Explicación de cómo las diferentes concentraciones de metabolitos pueden ser indicativas de la condición clínica de los pacientes.
 
