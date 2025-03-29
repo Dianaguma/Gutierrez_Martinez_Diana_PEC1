@@ -5,8 +5,13 @@ date: "2025-03-26"
 ---
 
 ```{r}
-```{r}
-# Cargar las librerías necesarias
+# Configura un mirror de CRAN (ejemplo con el mirror de RStudio)
+options(repos = c(CRAN = "https://cran.rstudio.com"))
+
+# Instalar paquetes
+install.packages("usethis")
+install.packages("BiocManager")
+
 install.packages("usethis")
 library(usethis)
 
@@ -96,8 +101,26 @@ data_matrix <- data_matrix[order_indices, ]
 sample_data <- sample_data[order_indices, ]
 
 # Verificar nuevamente las dimensiones
+
 cat("Dimensiones de sample_data:", dim(sample_data), "\n")
 cat("Dimensiones de data_matrix:", dim(data_matrix), "\n")
+
+nrow(data_matrix)  # Debería coincidir con el número de Patient.ID #77
+length(sample_data$Patient.ID)  # 77
+
+sample_data <- sample_data[!duplicated(sample_data$Patient.ID), ]
+data_matrix <- data_matrix[!duplicated(rownames(data_matrix)), ]
+
+common_ids <- intersect(sample_data$Patient.ID, rownames(data_matrix))
+
+sample_data <- sample_data[sample_data$Patient.ID %in% common_ids, ]
+data_matrix <- data_matrix[rownames(data_matrix) %in% common_ids, ]
+
+order_indices <- match(sample_data$Patient.ID, rownames(data_matrix))
+
+data_matrix <- data_matrix[order_indices, ]
+sample_data <- sample_data[order_indices, ]
+
 
 # Crear el objeto SummarizedExperiment
 se <- SummarizedExperiment(
@@ -259,12 +282,5 @@ ggplot(varianza_df, aes(x = PC)) +
 ggsave("C:/Users/merma/OneDrive/Escritorio/varianza_explicada.png", width = 10, height = 6, dpi = 300)
 
 ```
-![Heatmap](C:/Users/merma/OneDrive/Escritorio/heatmap.png)
-
-![Varianza explicada](C:/Users/merma/OneDrive/Escritorio/varianza_explicada.png)
-
-
-
-
-```
-
+![Heatmap](C:/Users/merma/OneDrive/Escritorio/heatmap.png) # Archivo agregado al proyecto GitHub
+![Varianza explicada](C:/Users/merma/OneDrive/Escritorio/varianza_explicada.png) # Archivo agregado al proyecto GitHub
