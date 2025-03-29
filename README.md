@@ -150,14 +150,30 @@ Finalmente, el **ácido fenilacético** y el **indoxilsulfato** muestran correla
 
 # Hago mapa de calor de la correlación entre metabolitos
 
-•  Interpretación de Resultados desde el Punto de Vista Biológico (2-3 páginas)
+# Interpretación de Resultados desde el Punto de Vista Biológico y hallazgos más importantes. Explicación de cómo las diferentes concentraciones de metabolitos pueden ser indicativas de la condición clínica de los pacientes.
+
+El **Oxoglutarato**, **succinato**, y **acetato**: Son metabolitos involucrados en el ciclo de Krebs, importantes en la producción de energía a nivel celular. Sabemos que en la caquexia, se observa una disfunción del metabolismo energético, alterando la utilización de energía y la producción de ATP. Por tanto si vemos niveles elevados o alterados de estos metabolitos nos puede indicar que el cuerpo está intentando adaptarse a un estado de energía reducido. Esto ocurre en la caquexia, debido a la desregulación en el metabolismo de los carbohidratos, las grasas y las proteínas.
+
+la **acetona**: En situaciones de caquexia, puede haber una mayor utilización de los cuerpos cetónicos para la producción de energía debido a la disminución de los carbohidratos disponibles, y la acetona es uno de esos productos. La acumulación de cetonas podría reflejar un cambio hacia la utilización de las grasas para obtener energía y esto es lo que ocurre en la caquexia.
 
 # Resultados clave: relación entre los metabolitos y la pérdida de masa muscular (muscle loss).
-•	Agrupamiento de pacientes: explicación de cómo las diferentes concentraciones de metabolitos pueden ser indicativas de la condición clínica de los pacientes.
-•	Posibles implicaciones biológicas: cómo el análisis puede contribuir al entendimiento de la caquexia en humanos y el papel de los metabolitos en el proceso.
-•  Conclusiones (0.5-1 página)
-•	Resumen de los hallazgos más importantes.
-•	Reflexiones sobre las limitaciones del análisis y posibles estudios futuros.
-•  Anexos (opcional)
-•	Fragmentos de código utilizados (si es necesario).
+
+Aminoácidos como la alanina, glutamina, leucina y valina: En la caquexia, la pérdida de masa muscular se asocia con un catabolismo aumentado de las proteínas, lo que libera aminoácidos.
+
+La glutamina juega un papel fundamental en el metabolismo celular y en el mantenimiento de la función inmune, pero también es un indicador de la degradación muscular. La correlación de la glutamina con otros metabolitos podría reflejar un intento del cuerpo de compensar la pérdida muscular y la alteración del metabolismo energético.
+
+La alanina es un aminoácido que se produce durante la glucólisis y tiene un papel crucial en el transporte de energía entre los músculos y el hígado, y sus niveles elevados en condiciones de caquexia podrían reflejar un metabolismo alterado de proteínas y glucosa.
+
+La leucina es un aminoácido esencial que está involucrado en la síntesis de proteínas musculares, y su correlación con otros metabolitos podría estar indicando intentos del cuerpo por estimular la síntesis proteica para contrarrestar la pérdida de masa muscular.
+
+
+# Conclusiones 
+
+Los resultados de las correlaciones metabólicas sugieren varias formas en las que el síndrome de caquexia puede estar relacionado con alteraciones en el metabolismo energético, la descomposición de proteínas, la inflamación sistémica y la disfunción de las vías de señalización celular. Los metabolitos observados en este análisis están directamente involucrados en las vías que se alteran en la caquexia, lo que indica que los cambios metabólicos descritos podrían ser indicativos de los procesos subyacentes a la pérdida de masa muscular, la fatiga, la alteración de los procesos energéticos y el aumento de la inflamación crónica.
+
+El entendimiento de cómo estos metabolitos interactúan entre sí podría ayudar en el diseño de estrategias terapéuticas para tratar o mitigar los efectos de la caquexia en pacientes con enfermedades crónicas.
+
+# Reflexiones sobre las limitaciones del análisis y posibles estudios futuros.
+
+
 
