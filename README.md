@@ -1,6 +1,6 @@
 # Gutierrez_Martinez_Diana_PEC1
 
-# Análisis Exploratorio de Datos y Construcción del SummarizedExperiment"
+# Análisis Exploratorio de Datos y Construcción del SummarizedExperiment
 Diana Gutierrez Martínez
 •	Fecha: 29/03/2025
 •	UOC
@@ -9,7 +9,7 @@ Diana Gutierrez Martínez
 
 El análisis de datos ómicos se ha vuelto fundamental para entender los procesos biológicos detrás de diversas enfermedades y condiciones físicas. Dado que estos estudios involucran grandes cantidades de datos complejos, como los perfiles de metabolitos en diferentes contextos, es necesario utilizar estructuras de datos sofisticadas que permitan gestionar y analizar la información de manera efectiva. En este sentido, el rol del bioinformático es esencial. Este profesional no solo debe comprender a fondo los datos, sino también interpretar y analizar los metadatos asociados para obtener conclusiones significativas de los estudios. Gracias a su expertise, se pueden extraer resultados valiosos que ayuden a avanzar en el conocimiento de estos procesos biológicos.
 
-Para ello he creado un archivo Rda  desde R-studio que he adjuntado a este proyecto llamado Gutierrez_Martinez_Diana_PEC1 de la clase SummarizedExperiment. Este archivo llamado "SummarizedExperiment_Diana_Gutiérrez.rda es una extensión moderna y poderosa de la clase ExpressionSet, que se usa para la biología computacional para poder manejar y analizar datos ómicos. SummarizedExperiment nos da datos de manera estructurada y nos ayuda a almacenar datos experimentales, metadatos de muestras (como IDs de pacientes, condiciones experimentales) y metadatos de características (como información sobre los metabolitos o genes estudiados). Y así nos es más comodo trabajar con paquetes como Bioconductor, como DESeq2 o edgeR, para análisis de datos de secuenciación de alto rendimiento, y en este caso, para el análisis de metabolitos. Como podemos ver en el archivo agregado llamado PEC1.Rmd en formato R Markdown. 
+Para ello he creado un archivo Rda  desde R-studio que he adjuntado a este proyecto llamado **Gutierrez_Martinez_Diana_PEC1** de la clase SummarizedExperiment. Este archivo llamado **SummarizedExperiment_Diana_Gutiérrez.rda** es una extensión moderna y poderosa de la clase ExpressionSet, que se usa para la biología computacional para poder manejar y analizar datos ómicos. SummarizedExperiment nos da datos de manera estructurada y nos ayuda a almacenar datos experimentales, metadatos de muestras (como IDs de pacientes, condiciones experimentales) y metadatos de características (como información sobre los metabolitos o genes estudiados). Y así nos es más comodo trabajar con paquetes como Bioconductor, como DESeq2 o edgeR, para análisis de datos de secuenciación de alto rendimiento, y en este caso, para el análisis de metabolitos. Como podemos ver en el archivo agregado llamado PEC1.Rmd en formato R Markdown. 
 
 En este análisis, se está trabajando con un conjunto de datos de metabolómica que incluye mediciones de metabolitos en pacientes con cachexia, que consiste en una pérdida significativa de masa muscular entre otros síntomas. Los datos contienen tanto las concentraciones de diversos metabolitos como metadatos clínicos, la identificación del paciente y el estado de pérdida muscular. Por tanto he creado una estructura de datos SummarizedExperiment para organizar estos datos de manera que facilite su análisis, permitiendo explorar correlaciones entre los metabolitos y realizar análisis más profundos sobre su papel en la cachexia.
 
@@ -19,7 +19,7 @@ Para ello he tenido que preparar los datos, integrar metadatos, crear el objeto 
 
 Evaluar las concentraciones de diversos metabolitos para identificar posibles biomarcadores de condiciones clínicas y metabólicas en los pacientes.
 
-# Selección y Justificación del Dataset (1 página)
+# Selección y Justificación del Dataset 
 
 El dataset proviene del repositorio nutrimetabolomics/metaboData en GitHub y contiene datos sobre concentraciones de metabolitos en pacientes, incluyendo información sobre la pérdida muscular (Muscle loss) y diversos metabolitos relacionados con el metabolismo energético y la función muscular. Las principales variables del dataset incluyen identificadores de pacientes (Patient ID), pérdida muscular y una serie de metabolitos que pueden proporcionar información sobre el estado metabólico de los individuos. Los metabolitos incluidos, como Anhydro-β-D-glucose, Methylnicotinamide, Aminobutyrate, entre otros, son relevantes porque están involucrados en vías metabólicas que afectan la síntesis de proteínas, el balance energético y el funcionamiento muscular. La medición de estos metabolitos puede ayudar a entender mejor los cambios metabólicos en la caquexia, una condición caracterizada por la pérdida de masa muscular y debilidad, a menudo observada en enfermedades crónicas como el cáncer y la insuficiencia cardíaca, proporcionando posibles biomarcadores de diagnóstico y objetivos terapéuticos.
 
@@ -31,9 +31,7 @@ Para poder crear datos en formato SummarizedExpriment:
   Primero, se instalan y cargan librerías necesarias, como usethis, BiocManager, SummarizedExperiment, y readr, así manejo el archivos CSV  llamado human_cachexia y creo un objeto de tipo SummarizedExperiment (adjunto en el proyecto llamado: SummarizedExperiment_Diana_Gutiérrez.rda.)
 
   # Leo el archivo CSV que contiene datos de pacientes, la pérdida muscular y las concentraciones de metabolitos.
-    - Los datos se separan en dos partes:
-        Metadatos (como el ID del paciente y la pérdida muscular).
-        Datos experimentales (mediciones de los metabolitos).
+    Los datos se separan en dos partes: Metadatos (como el ID del paciente y la pérdida muscular). Datos experimentales (mediciones de los metabolitos).
 
   # Limpieza de datos: 
     Elimino filas con valores faltantes (NA) en los metadatos y aseguro que las filas en los datos experimentales coincidan con los metadatos del paciente. 
@@ -41,11 +39,11 @@ Para poder crear datos en formato SummarizedExpriment:
     
   # Alineación de los datos: 
   
-  Miro qu los datos de las filas de metadatos y las mediciones de metabolitos estén alineados correctamente, para ello uso las identificaciones de los pacientes.
+  Miro que los datos de las filas de metadatos y las mediciones de metabolitos estén alineados correctamente, para ello uso las identificaciones de los pacientes.
 
   # Creación del objeto SummarizedExperiment:
   
-    Utilizo la función SummarizedExperiment(). El conjunto de datos de metabolitos se almacena en el slot assays, bajo el nombre counts, y los metadatos del paciente en el slot colData.
+    Utilizo la función **SummarizedExperiment()**. El conjunto de datos de metabolitos se almacena en el slot assays, bajo el nombre counts, y los metadatos del paciente en el slot colData.
 
   # Guardar el objeto:
   
@@ -53,15 +51,16 @@ Para poder crear datos en formato SummarizedExpriment:
 
 Los resultados que nos muestra el SummarizedExperiment son: 
 
-class: SummarizedExperiment 
-#dim: 63 63 
-#metadata(0):
-#assays(1): counts
-#rownames(63): PIF_178 PIF_087 ... NETCR_008_V1 NETCR_008_V2
-#rowData names(1): MuscleLoss
-#colnames(63): 1,6-Anhydro-beta-D-glucose 1-Methylnicotinamide ...
-#  pi-Methylhistidine tau-Methylhistidine
-#colData names(2): Patient ID Muscle loss
+        
+        class: SummarizedExperiment 
+        #dim: 63 63 
+        #metadata(0):
+        #assays(1): counts
+        #rownames(63): PIF_178 PIF_087 ... NETCR_008_V1 NETCR_008_V2
+        #rowData names(1): MuscleLoss
+        #colnames(63): 1,6-Anhydro-beta-D-glucose 1-Methylnicotinamide ...
+        #  pi-Methylhistidine tau-Methylhistidine
+        #colData names(2): Patient ID Muscle loss
 
 # Explicación detallada de los datos 
 
