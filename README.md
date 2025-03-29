@@ -75,9 +75,7 @@ Vemos que los **Metadatos (metadata(0))**: Significa qu no hay metadatos adicion
 **(rownames(63))**: Las filas pertenecen a los pacientes, con identificadores como PIF_178, PIF_087, etc. IDs de los pacientes de la base de datos que se utilizaron en el análisis.
 
 Datos de las filas (rowData names(1): MuscleLoss): La variable rowData tiene una sola columna, llamada MuscleLoss, que indica la pérdida de masa muscular en cada paciente.
-Nombres de las columnas (colnames(63)): Las columnas corresponden a los **metabolitos medidos**, como 1,6-Anhydro-beta-D-glucose, 1-Methylnicotinamide, etc. Estas mediciones pueden ser importantes para entender cómo varía el metabolismo entre pacientes con diferente grado de pérdida muscular.
-
-Datos de las columnas (colData names(2): Patient ID, Muscle loss): El **slot colData** contiene dos columnas: Patient ID: El identificador de cada paciente. Muscle loss: El grado de pérdida de masa muscular para cada paciente. Este es el factor principal en el estudio de la caquexia, por lo que este dato es esencial para cualquier análisis correlacionando los metabolitos con la severidad de la enfermedad.
+Nombres de las columnas (colnames(63)): Las columnas corresponden a los **metabolitos medidos**, como 1,6-Anhydro-beta-D-glucose, 1-Methylnicotinamide, etc. Estas mediciones pueden ser importantes para entender cómo varía el metabolismo entre pacientes con diferente grado de pérdida muscular. Datos de las columnas (colData names(2): Patient ID, Muscle loss): El **slot colData** contiene dos columnas: Patient ID: El identificador de cada paciente. Muscle loss: El grado de pérdida de masa muscular para cada paciente. Este es el factor principal en el estudio de la caquexia, por lo que este dato es esencial para cualquier análisis correlacionando los metabolitos con la severidad de la enfermedad.
 
 # Análisis Exploratorio de los Datos 
 
@@ -123,23 +121,35 @@ colnames(assays(se)$counts)
 [61] "trans-Aconitate"            "pi-Methylhistidine"         "tau-Methylhistidine"   
 
 Miramos las condiciones de cada paciente relacionadas a la massa muscular : 
- se$`Muscle loss`
- [1] cachexic cachexic cachexic cachexic cachexic cachexic cachexic cachexic cachexic cachexic
-[11] cachexic cachexic cachexic cachexic cachexic cachexic cachexic cachexic cachexic cachexic
-[21] cachexic cachexic cachexic cachexic cachexic cachexic cachexic cachexic cachexic cachexic
-[31] cachexic cachexic cachexic cachexic cachexic cachexic cachexic cachexic cachexic cachexic
-[41] cachexic cachexic cachexic cachexic cachexic cachexic cachexic control  control  control 
-[51] control  control  control  control  control  control  control  control  control  control 
-[61] control  control  control 
-Levels: cachexic control
+ 
+           se$`Muscle loss`
+           [1] cachexic cachexic cachexic cachexic cachexic cachexic cachexic cachexic cachexic cachexic
+          [11] cachexic cachexic cachexic cachexic cachexic cachexic cachexic cachexic cachexic cachexic
+          [21] cachexic cachexic cachexic cachexic cachexic cachexic cachexic cachexic cachexic cachexic
+          [31] cachexic cachexic cachexic cachexic cachexic cachexic cachexic cachexic cachexic cachexic
+          [41] cachexic cachexic cachexic cachexic cachexic cachexic cachexic control  control  control 
+          [51] control  control  control  control  control  control  control  control  control  control 
+          [61] control  control  control 
+          Levels: cachexic control
+
+# Me enfoco en mirar las estadisticas descriptivas: 
+
+Al hacer un  **summary(assays(se)$counts)** Si nos enfocamos en los resultados de los metabolitos obtengo en general una gran variabilidad en sus concentraciones. Si nos enfocamos en el citrato y la creatinina, vemos que estan mucho más elevados en comparación con otros. Estos valores son importantes en el análisis de condiciones fisiológicas y pueden ser claves en estudios relacionados con el metabolismo y patologías como la cachexia.
 
 # Primero calculo la corrección entre los metabolitos 
-Observo que 
+
+Observo que los ácidos como el **succinato**, el **oxoglutarato** y el **ácido acético** tienen fuertes correlaciones entre ellos. Se que están involucrados en las rutas metabólicas relacionadas con el ciclo de Krebs, lo que indica una estrecha relación en la producción de energía.
+
+En cambio la **acetona**, el **ácido acético**, y el **ácido adipato** tienen correlaciones significativas, sabemos que se relacionan entre si porque son metabolitos conectados con la utilización de grasas o la producción de cuerpos cetónicos, cuando estamos en ayuno o metabolismo alterado.
+
+La **glutamina**, la **alanina**, la **leucina**, la **serina** y la **valina** tienen relaciones entre sí, son importantes para el metabolismo celular y en la síntesis de proteínas. 
+
+El **ácido pantoténico**, el **acetato** y el **nicotinamida** son coenzimas esenciales en las vías metabólicas, sobretodo en la producción de energía. 
+
+Finalmente, el **ácido fenilacético** y el **indoxilsulfato** muestran correlaciones entre sí, creo que están involucrados en procesos antioxidantes y de detoxificación. Y son importantes en el metabolismo de los fenoles. 
 
 # Hago mapa de calor de la correlación entre metabolitos
 
-
-o	Posible uso de PCA (análisis de componentes principales) para observar agrupamientos entre pacientes.
 •  Interpretación de Resultados desde el Punto de Vista Biológico (2-3 páginas)
 
 # Resultados clave: relación entre los metabolitos y la pérdida de masa muscular (muscle loss).
