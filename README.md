@@ -25,33 +25,18 @@ El dataset proviene del repositorio nutrimetabolomics/metaboData en GitHub y con
 
 # Incorporación de los Datos a SummarizedExperiment 
 
-Para poder crear datos en formato SummarizedExpriment: 
+Primero, se instalan y cargan librerías necesarias, como usethis, BiocManager, SummarizedExperiment, y readr, así manejo el archivos CSV  llamado human_cachexia y creo un objeto de tipo SummarizedExperiment (adjunto en el proyecto llamado: SummarizedExperiment_Diana_Gutiérrez.rda.)
 
-  # Instalar y cargar librerías: 
-  Primero, se instalan y cargan librerías necesarias, como usethis, BiocManager, SummarizedExperiment, y readr, así manejo el archivos CSV  llamado human_cachexia y creo un objeto de tipo SummarizedExperiment (adjunto en el proyecto llamado: SummarizedExperiment_Diana_Gutiérrez.rda.)
+Leo el archivo CSV que contiene datos de pacientes, la pérdida muscular y las concentraciones de metabolitos. Los datos se separan en dos partes: Metadatos (como el ID del paciente y la pérdida muscular). Datos experimentales (mediciones de los metabolitos).
 
-  # Leo el archivo CSV que contiene datos de pacientes, la pérdida muscular y las concentraciones de metabolitos.
-    Los datos se separan en dos partes: Metadatos (como el ID del paciente y la pérdida muscular). Datos experimentales (mediciones de los metabolitos).
+Elimino filas con valores faltantes (NA) en los metadatos y aseguro que las filas en los datos experimentales coincidan con los metadatos del paciente.  Además, elimino duplicados si los hay. Miro que los datos de las filas de metadatos y las mediciones de metabolitos estén alineados correctamente, para ello uso las identificaciones de los pacientes.
 
-  # Limpieza de datos: 
-    Elimino filas con valores faltantes (NA) en los metadatos y aseguro que las filas en los datos experimentales coincidan con los metadatos del paciente. 
-    Además, elimino duplicados si los hay.
-    
-  # Alineación de los datos: 
+# Creación del objeto SummarizedExperiment:
   
-  Miro que los datos de las filas de metadatos y las mediciones de metabolitos estén alineados correctamente, para ello uso las identificaciones de los pacientes.
-
-  # Creación del objeto SummarizedExperiment:
-  
-    Utilizo la función **SummarizedExperiment()**. El conjunto de datos de metabolitos se almacena en el slot assays, bajo el nombre counts, y los metadatos del paciente en el slot colData.
-
-  # Guardar el objeto:
-  
-  El objeto SummarizedExperiment se guarda en un archivo .rda para su posterior análisis (adjunto en Github): Gutierrez_Martinez_Diana_PEC1 
+Utilizo la función **SummarizedExperiment()**. El conjunto de datos de metabolitos se almacena en el slot assays, bajo el nombre counts, y los metadatos del paciente en el slot colData. El objeto SummarizedExperiment se guarda en un archivo .rda para su posterior análisis (adjunto en Github): Gutierrez_Martinez_Diana_PEC1 
 
 Los resultados que nos muestra el SummarizedExperiment son: 
-
-        
+       
         class: SummarizedExperiment 
         #dim: 63 63 
         #metadata(0):
