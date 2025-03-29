@@ -2,6 +2,7 @@
 
 # Análisis Exploratorio de Datos y Construcción del SummarizedExperiment
 Diana Gutierrez Martínez
+- Archivo: human_cachexia : (https://github.com/Dianaguma/Gutierrez_Martinez_Diana_PEC1/blob/main/human_cachexia.csv)
 •	Fecha: 29/03/2025
 •	UOC
 
