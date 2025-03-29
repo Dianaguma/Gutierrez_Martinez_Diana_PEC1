@@ -3,6 +3,7 @@ title: "PEC 1 Diana_Gutiérrez"
 author: "Diana Gutierrez Martínez"
 date: "2025-03-26"
 ---
+
 ```{r}
 ```{r}
 # Cargar las librerías necesarias
@@ -193,8 +194,6 @@ ggplot(cor_data, aes(Var1, Var2, fill = value)) +
 
 ggsave("C:/Users/merma/OneDrive/Escritorio/heatmap.png")
 
-# El heatmap se a adjuntado al GitHub para poderlo descargar si es necesario. 
-
 # PCA (Análisis de Componentes Principales) : Así hago exploración y visualizo la variabilidad de los datos:
 
 pca_result <- prcomp(t(assays(se)$counts), scale = TRUE)
@@ -224,7 +223,46 @@ ggplot(pca_scores_df, aes(x = PC1, y = PC2)) +
 
 directorio <- "C:/Users/merma/OneDrive/Escritorio/MASTER BIOINFORMATICA/analisis de datos omicos/Gutiérrez -Martínez -Diana-PEC1"
 
-write.csv(pca_scores_df, file = paste0(directorio, "/pca_scores.csv"))
+write.csv(pca_scores_df, file = paste0(directorio, "/pca_scores.csv")) 
+
+# También lo adjunto al GitHub. 
+
+
+# Extraer la proporción de varianza explicada
+
+varianza_explicada <- pca_result$sdev^2 / sum(pca_result$sdev^2)
+
+# Proporción acumulada de varianza
+varianza_acumulada <- cumsum(varianza_explicada)
+
+# Crear un data frame con la varianza explicada
+varianza_df <- data.frame(PC = paste0("PC", 1:length(varianza_explicada)),
+                          Varianza_Explicada = varianza_explicada,
+                          Varianza_Acumulada = varianza_acumulada)
+
+# Graficar varianza explicada y acumulada
+
+library(ggplot2)
+
+# Graficar varianza explicada y acumulada
+ggplot(varianza_df, aes(x = PC)) +
+  geom_bar(aes(y = Varianza_Explicada), stat = "identity", fill = "blue", alpha = 0.6) +
+  geom_line(aes(y = Varianza_Acumulada * max(varianza_explicada), group = 1), color = "red", linewidth = 1) + 
+  geom_point(aes(y = Varianza_Acumulada * max(varianza_explicada), group = 1), color = "red") + 
+  labs(title = "Varianza Explicada y Acumulada por los Componentes Principales",
+       x = "Componente Principal",
+       y = "Proporción de Varianza / Acumulada") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  scale_y_continuous(sec.axis = sec_axis(~./max(varianza_explicada), name = "Proporción Acumulada")) +
+  theme_minimal()
+
+ggsave("C:/Users/merma/OneDrive/Escritorio/varianza_explicada.png", width = 10, height = 6, dpi = 300)
+
+```
+![Heatmap](C:/Users/merma/OneDrive/Escritorio/heatmap.png)
+
+![Varianza explicada](C:/Users/merma/OneDrive/Escritorio/varianza_explicada.png)
+
 
 
 
