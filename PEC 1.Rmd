@@ -3,6 +3,7 @@ title: "PEC 1 Diana_Gutiérrez"
 author: "Diana Gutierrez Martínez"
 date: "2025-03-26"
 ---
+```{r}
 # Cargar las librerías necesarias
 install.packages("usethis")
 library(usethis)
@@ -27,6 +28,8 @@ data <- read.csv("C:/Users/merma/OneDrive/Escritorio/MASTER BIOINFORMATICA/anali
 
 # Separar los metadatos (por ejemplo, Patient ID y Muscle loss)
 sample_data <- data[, c("Patient.ID", "Muscle.loss")]
+
+View(data)
 
 # Convertir "Muscle_loss" en factor
 sample_data$Muscle.loss <- factor(sample_data$Muscle.loss)
@@ -59,6 +62,10 @@ if (is.null(rownames(data_matrix)) || length(rownames(data_matrix)) == 0) {
 # Verificar los nombres de las filas
 cat("Comprobando los nombres de fila...\n")
 print(head(rownames(data_matrix)))  # Muestra los primeros nombres de fila
+
+# > print(head(rownames(data_matrix)))  # Muestra los primeros nombres de fila[1] "PIF_178"     "PIF_087"     "PIF_090"     "NETL_005_V1" "PIF_115"     "PIF_110"  
+
+
 
 # Verificar si hay duplicados en Patient.ID y eliminarlos
 sample_data <- sample_data[!duplicated(sample_data$Patient.ID), ]
@@ -113,8 +120,18 @@ se
 
 save(se, file = "C:/Users/merma/OneDrive/Escritorio/MASTER BIOINFORMATICA/analisis de datos omicos/Gutiérrez -Martínez -Diana-PEC1/SummarizedExperiment_Diana_Gutiérrez.rda")
 
+# Así agrego un archivo Rda que agregaré a github de los summarizedExperiment
+
 
 # 3. Llevad a cabo un análisis exploratorio que os proporcione una visión general del dataset en la línea de lo que hemos visto en las actividades de este reto
+
+colData(se)
+
+colnames(assays(se)$counts) # nombres de los metabolitos (columnas de los ensayos):
+
+se$`Muscle loss`
+
+# Vamos a hacer analisis gráficos 
 
 install.packages("ggplot2")     # Para visualización
 install.packages("dplyr")       # Para manipulación de datos
@@ -126,6 +143,7 @@ library(ggplot2)
 library(tidyr)
 
 # Calcular la correlación entre los metabolitos
+
 cor_matrix <- cor(data_matrix, use = "pairwise.complete.obs")
 
 print(cor_matrix)
@@ -135,6 +153,7 @@ library(reshape2)
 
 # Convertir la matriz de correlación a formato largo
 cor_data <- melt(cor_matrix)
+
 
 # Mapa de calor de la correlación entre metabolitos
 ggplot(cor_data, aes(Var1, Var2, fill = value)) +
