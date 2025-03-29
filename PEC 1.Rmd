@@ -4,61 +4,50 @@ author: "Diana Gutierrez Martínez"
 date: "2025-03-26"
 ---
 
+
 ```{r}
-# Configura un mirror de CRAN (ejemplo con el mirror de RStudio)
+
+# Configuración de un mirror de CRAN y paquetes necesarios
 options(repos = c(CRAN = "https://cran.rstudio.com"))
 
-# Instalar paquetes
-install.packages("usethis")
-install.packages("BiocManager")
+# Instalar paquetes necesarios
+install.packages(c("usethis", "BiocManager", "readr", "ggplot2", "dplyr", "patchwork", "GGally", "tidyr", "reshape2"))
 
-install.packages("usethis")
+# Cargar las librerías necesarias
 library(usethis)
-
-# Configurar GitHub remoto (opcional, solo si es necesario para tu proyecto)
-use_git_remote(url = "https://github.com/Dianaguma/Gutierrez_Mart-nez-_Diana_PEC1", overwrite = TRUE)
-
-# Seleccionar un mirror de CRAN
-chooseCRANmirror(graphics = FALSE, ind = 1)
-
-# Instalar y cargar BiocManager para paquetes de Bioconductor
-install.packages("BiocManager")
-BiocManager::install("SummarizedExperiment")
-
-# Instalar y cargar readr para manejo de archivos CSV
-install.packages("readr")
+library(BiocManager)
 library(SummarizedExperiment)
 library(readr)
+library(ggplot2)
+library(dplyr)
+library(patchwork)
+library(GGally)
+library(tidyr)
+library(reshape2)
 
-# Leer el archivo CSV con la ruta completa
+# Configuración de GitHub (solo si es necesario para tu proyecto)
+use_git_remote(url = "https://github.com/Dianaguma/Gutierrez_Mart-nez-_Diana_PEC1", overwrite = TRUE)
+
+# Leer los datos CSV desde la ruta especificada
 data <- read.csv("C:/Users/merma/OneDrive/Escritorio/MASTER BIOINFORMATICA/analisis de datos omicos/Gutiérrez -Martínez -Diana-PEC1/human_cachexia.csv")
 
-# Separar los metadatos (por ejemplo, Patient ID y Muscle loss)
+# Extraer los metadatos (Patient ID y Muscle loss)
 sample_data <- data[, c("Patient.ID", "Muscle.loss")]
 
-View(data)
-
-# Convertir "Muscle_loss" en factor
+# Convertir "Muscle.loss" a factor
 sample_data$Muscle.loss <- factor(sample_data$Muscle.loss)
 
 # Eliminar filas con NA en los metadatos
 sample_data <- sample_data[complete.cases(sample_data), ]
 
-# Separar los datos experimentales (mediciones de metabolitos)
-exp_data <- data[, -(1:2)]  # Eliminamos las primeras dos columnas (metadatos)
+# Extraer los datos experimentales (metabolitos)
+exp_data <- data[, -(1:2)]  # Eliminamos las dos primeras columnas (metadatos)
 
-# Convertir los datos experimentales a matriz
+# Convertir los datos experimentales a una matriz
 data_matrix <- as.matrix(exp_data)
 
-print(data_matrix)
-
-# matriz o conjunto de datos que lista varios metabolitos o compuestos bioquímicos junto con sus concentraciones correspondientes. Cada fila representa una muestra, y cada columna corresponde a un metabolito diferente. Los valores en la tabla representan los niveles de concentración de cada metabolito en cada muestra. El conjunto de datos parece contener muchos metabolitos involucrados en diferentes vías metabólicas, como aminoácidos, ácidos orgánicos y otros compuestos bioquímicos. Estos compuestos pueden ser importantes para estudios relacionados con el metabolismo, la bioquímica o cualquier área donde el perfil metabólico sea relevante.
-
-# Verificar que los nombres de fila están vacíos o incorrectos
+# Verificar y asignar los nombres de las filas (Patient.ID)
 if (is.null(rownames(data_matrix)) || length(rownames(data_matrix)) == 0) {
-  cat("Asignando los nombres de fila a data_matrix...\n")
-  
-  # Comprobamos que los IDs en sample_data coinciden con las filas de data_matrix
   if (length(sample_data$Patient.ID) == nrow(data_matrix)) {
     rownames(data_matrix) <- sample_data$Patient.ID
   } else {
@@ -66,61 +55,19 @@ if (is.null(rownames(data_matrix)) || length(rownames(data_matrix)) == 0) {
   }
 }
 
-# Verificar los nombres de las filas
-cat("Comprobando los nombres de fila...\n")
-print(head(rownames(data_matrix)))  # Muestra los primeros nombres de fila
-
-# > print(head(rownames(data_matrix)))  # Muestra los primeros nombres de fila[1] "PIF_178"     "PIF_087"     "PIF_090"     "NETL_005_V1" "PIF_115"     "PIF_110"  
-
-
-
-# Verificar si hay duplicados en Patient.ID y eliminarlos
+# Eliminar duplicados en los metadatos y en las filas de la matriz
 sample_data <- sample_data[!duplicated(sample_data$Patient.ID), ]
 data_matrix <- data_matrix[!duplicated(rownames(data_matrix)), ]
 
-# Asegurar que solo se mantienen IDs comunes entre sample_data y data_matrix
+# Asegurarse de que los IDs de las muestras coinciden entre sample_data y data_matrix
 common_ids <- intersect(sample_data$Patient.ID, rownames(data_matrix))
-
-# Filtrar ambas estructuras para mantener solo las IDs en común
 sample_data <- sample_data[sample_data$Patient.ID %in% common_ids, ]
 data_matrix <- data_matrix[rownames(data_matrix) %in% common_ids, ]
 
-# Asegurar que las filas en data_matrix y sample_data están alineadas
-cat("Alineando filas de data_matrix y sample_data...\n")
-
-# Usamos match para encontrar las filas en el orden correcto
+# Reordenar las filas para asegurarse de que están alineadas
 order_indices <- match(sample_data$Patient.ID, rownames(data_matrix))
-
-# Verificar si todos los IDs de sample_data están presentes en rownames(data_matrix)
-if (any(is.na(order_indices))) {
-  cat("Advertencia: Algunos Patient.ID de sample_data no están presentes en rownames(data_matrix).\n")
-}
-
-# Reordenar ambas estructuras según el índice obtenido con match
 data_matrix <- data_matrix[order_indices, ]
 sample_data <- sample_data[order_indices, ]
-
-# Verificar nuevamente las dimensiones
-
-cat("Dimensiones de sample_data:", dim(sample_data), "\n")
-cat("Dimensiones de data_matrix:", dim(data_matrix), "\n")
-
-nrow(data_matrix)  # Debería coincidir con el número de Patient.ID #77
-length(sample_data$Patient.ID)  # 77
-
-sample_data <- sample_data[!duplicated(sample_data$Patient.ID), ]
-data_matrix <- data_matrix[!duplicated(rownames(data_matrix)), ]
-
-common_ids <- intersect(sample_data$Patient.ID, rownames(data_matrix))
-
-sample_data <- sample_data[sample_data$Patient.ID %in% common_ids, ]
-data_matrix <- data_matrix[rownames(data_matrix) %in% common_ids, ]
-
-order_indices <- match(sample_data$Patient.ID, rownames(data_matrix))
-
-data_matrix <- data_matrix[order_indices, ]
-sample_data <- sample_data[order_indices, ]
-
 
 # Crear el objeto SummarizedExperiment
 se <- SummarizedExperiment(
@@ -128,81 +75,67 @@ se <- SummarizedExperiment(
   colData = sample_data
 )
 
-# Ver el objeto SummarizedExperiment
-se
-
-
-# Resultado al mostrar el summarizedExperiment: 
-# class: SummarizedExperiment 
-#dim: 63 63 
-#metadata(0):
-#assays(1): counts
-#rownames(63): PIF_178 PIF_087 ... NETCR_008_V1 NETCR_008_V2
-#rowData names(1): MuscleLoss
-#colnames(63): 1,6-Anhydro-beta-D-glucose 1-Methylnicotinamide ...
-#  pi-Methylhistidine tau-Methylhistidine
-#colData names(2): Patient ID Muscle loss
-
+# Guardar el objeto SummarizedExperiment
 save(se, file = "C:/Users/merma/OneDrive/Escritorio/MASTER BIOINFORMATICA/analisis de datos omicos/Gutiérrez -Martínez -Diana-PEC1/SummarizedExperiment_Diana_Gutiérrez.rda")
 
-# Así agrego un archivo Rda que agregaré a github de los summarizedExperiment
-
-
-# 3. Llevad a cabo un análisis exploratorio que os proporcione una visión general del dataset en la línea de lo que hemos visto en las actividades de este reto
-
+# Análisis exploratorio de los datos
+# Ver los metadatos
 colData(se)
 
-colnames(assays(se)$counts) # nombres de los metabolitos (columnas de los ensayos):
+# Hacer un t.test
 
-se$`Muscle loss`
+head(se)
 
-summary(assays(se)$counts) # puedo ver como actua los metabolitos. Me enfoco en el citrato y la creatinina que los veo muy elevados. Median del citrato:2079.74 . Median creatinine: 8350. 
+muscle_loss <- colData(se)$Muscle.loss  # Esto debería estar alineado con las columnas de la matriz
 
-apply(assays(se)$counts, 2, mean)  # Promedio de cada metabolito . Me enfoco en el citrato y la creatinina que los veo muy elevados. Median del citrato:2079.74 . Median creatinine: 8350. 
+# Separar los grupos 'control' y 'cachexic'
+control_group <- assays(se)$counts[, muscle_loss == "control"]  # Filtro por columnas
+case_group <- assays(se)$counts[, muscle_loss == "cachexic"]
 
-# Miro las desviaciones estandar por cada metabolito
+sample_data <- sample_data[match(rownames(assays(se)$counts), sample_data$Patient.ID), ]
 
+head(sample_data$Muscle.loss)
+
+p_values <- apply(assays(se)$counts, 1, function(x) {
+  t.test(x[sample_data$Muscle.loss == "control"], x[sample_data$Muscle.loss == "cachexic"])$p.value
+})
+
+head(p_values)
+
+sorted_p_values <- sort(p_values)
+
+print(sorted_p_values)
+
+# Los p-valores son mayores que 0.05, no podemos rechazar la H0 (que afirma  que no hay diferencias entre los grupos). Por tanto, no encontramos evidencia suficiente para decir que los metabolitos analizados difieren significativamente entre los grupos de pacientes cachexicos y controles.
+
+# Calcular y ver la media de cada metabolito
+
+mean_values <- apply(assays(se)$counts, 2, mean)
+
+sorted_mean_values_desc <- sort(mean_values, decreasing = TRUE)
+
+head(sorted_mean_values_desc, 10)
+
+# Respuesta: La Creatinine tiene el valor más alto de concentración entre los metabolitos estudiados, con 9521.7754, seguido por Hippurate (2614.1479) y Citrate (2423.4689). Esto sugiere que la creatinina podría ser uno de los metabolitos más presentes en las muestras que estás analizando.
+
+
+# Calcular la desviación estándar por metabolito
 sd_per_metabolite <- apply(assays(se)$counts, 2, sd)
 
-print(sd_per_metabolite)
+# Puedo hacer un t-test
 
-# El citrato tiene: 2317.814577  y la creatinina tiene: 297.054442
-
-# Filtro datos de metabolitos con poca variabilidad 
-
+# Filtrar metabolitos con baja variabilidad (desviación estándar menor que 0.1)
 metabolite_sd <- apply(assays(se)$counts, 2, sd)
+se <- se[, metabolite_sd > 0.1]
 
-se <- se[, metabolite_sd > 0.1]  # Mantén metabolitos con SD mayor a 0.1
-
-
-# Vamos a hacer analisis gráficos 
-
-install.packages("ggplot2")     # Para visualización
-install.packages("dplyr")       # Para manipulación de datos
-install.packages("patchwork")   # Para combinar gráficos
-install.packages("GGally")      # Para análisis de correlación
-install.packages("tidyr")
-
-# Cargar las librerías necesarias
-
-library(SummarizedExperiment)
-library(reshape2)
-library(ggplot2)
-
-library(tidyr)
-
-# Extraer los datos de los metabolitos del objeto SummarizedExperiment (se)
-metabolite_data <- assay(se)  # Asegúrate de que 'se' es un objeto de clase SummarizedExperiment
-
-# Calcular la matriz de correlación entre los metabolitos
+# Mapa de calor de la correlación entre metabolitos
+metabolite_data <- assay(se)  # Obtener los datos de los metabolitos
 cor_matrix <- cor(metabolite_data)
 
-print(cor_matrix)
-
-library(reshape2)
+# Convertir la matriz de correlación a formato largo para ggplot
 cor_data <- melt(cor_matrix)
 
-# Crear el mapa de calor de la correlación entre metabolitos usando ggplot2
+# Crear el mapa de calor usando ggplot2
 ggplot(cor_data, aes(Var1, Var2, fill = value)) +
   geom_tile() +
   scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
@@ -214,58 +147,33 @@ ggplot(cor_data, aes(Var1, Var2, fill = value)) +
        x = "Metabolito", 
        y = "Metabolito")
 
-
+# Guardar el mapa de calor como archivo PNG
 ggsave("C:/Users/merma/OneDrive/Escritorio/heatmap.png")
 
-# PCA (Análisis de Componentes Principales) : Así hago exploración y visualizo la variabilidad de los datos:
-
+# PCA (Análisis de Componentes Principales) para explorar la variabilidad de los datos
 pca_result <- prcomp(t(assays(se)$counts), scale = TRUE)
-summary(pca_result)  # Resumen de las componentes principales
-
-  
-# PC1 tiene una sd  7.488
-
-loadings <- pca_result$rotation
-
-head(loadings)
-
-# Las proyecciones de las muestras en cada componente principal (PC)
-pca_scores <- pca_result$x
-
-head(pca_scores)
-
-# Convertir las proyecciones PCA a un data frame para la visualización
-pca_scores_df <- data.frame(pca_scores)
+summary(pca_result)  # Ver el resumen de las componentes principales
 
 # Graficar los primeros dos componentes principales (PC1 vs PC2)
-library(ggplot2)
+pca_scores <- pca_result$x
+pca_scores_df <- data.frame(pca_scores)
+
 ggplot(pca_scores_df, aes(x = PC1, y = PC2)) +
   geom_point() +
   labs(title = "PCA: PC1 vs PC2", x = "PC1", y = "PC2") +
   theme_minimal()
 
-directorio <- "C:/Users/merma/OneDrive/Escritorio/MASTER BIOINFORMATICA/analisis de datos omicos/Gutiérrez -Martínez -Diana-PEC1"
+# Guardar el gráfico PCA como archivo PNG
+ggsave("C:/Users/merma/OneDrive/Escritorio/pca_plot.png")
 
-write.csv(pca_scores_df, file = paste0(directorio, "/pca_scores.csv")) 
-
-# También lo adjunto al GitHub. 
-
-
-# Extraer la proporción de varianza explicada
-
+# Extraer la varianza explicada por cada componente principal
 varianza_explicada <- pca_result$sdev^2 / sum(pca_result$sdev^2)
-
-# Proporción acumulada de varianza
 varianza_acumulada <- cumsum(varianza_explicada)
 
-# Crear un data frame con la varianza explicada
+# Crear un data frame con la varianza explicada y acumulada
 varianza_df <- data.frame(PC = paste0("PC", 1:length(varianza_explicada)),
                           Varianza_Explicada = varianza_explicada,
                           Varianza_Acumulada = varianza_acumulada)
-
-# Graficar varianza explicada y acumulada
-
-library(ggplot2)
 
 # Graficar varianza explicada y acumulada
 ggplot(varianza_df, aes(x = PC)) +
@@ -279,8 +187,27 @@ ggplot(varianza_df, aes(x = PC)) +
   scale_y_continuous(sec.axis = sec_axis(~./max(varianza_explicada), name = "Proporción Acumulada")) +
   theme_minimal()
 
+# Guardar el gráfico de varianza explicada
 ggsave("C:/Users/merma/OneDrive/Escritorio/varianza_explicada.png", width = 10, height = 6, dpi = 300)
 
+# Exportar los resultados del PCA a un archivo CSV
+write.csv(pca_scores_df, file = "C:/Users/merma/OneDrive/Escritorio/pca_scores.csv")
+
 ```
-![Heatmap](C:/Users/merma/OneDrive/Escritorio/heatmap.png) # Archivo agregado al proyecto GitHub
-![Varianza explicada](C:/Users/merma/OneDrive/Escritorio/varianza_explicada.png) # Archivo agregado al proyecto GitHub
+![Heatmap](C:/Users/merma/OneDrive/Escritorio/heatmap.png)
+![Varianza explicada](C:/Users/merma/OneDrive/Escritorio/varianza_explicada.png)
+
+Promedio de concentraciones de metabolitos (ordenados de mayor a menor): Aqui observamos la Creatinina y el citrato con valores altos, como tambien el hipurato. 
+
+- **Creatinine**: 9521.7754
+- **Hippurate**: 2614.1479
+- **Citrate**: 2423.4689
+- **Glycine**: 950.9063
+- **Trimethylamine N-oxide**: 700.7406
+- **Glucose**: 657.2894
+- **Taurine**: 571.7576
+- **Dimethylamine**: 393.1835
+- **pi-Methylhistidine**: 391.5184
+- **Glutamine**: 337.0968
+
+
