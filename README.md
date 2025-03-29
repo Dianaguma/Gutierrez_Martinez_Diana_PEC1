@@ -161,8 +161,12 @@ Instalo el paquete igraph y cargo el paquete. Estableces un umbral (threshold) d
 
 ![Mapa de calor](https://github.com/Dianaguma/Gutierrez_Martinez_Diana_PEC1/blob/main/heatmap.png)
 
+![Gráfico de correlación](https://github.com/Dianaguma/Gutierrez_Martinez_Diana_PEC1/blob/main/grafico_correlacion.png)
+
 # Analisis de PCA
 PC1 tiene una desviación estándar significativamente mayor (7.488), por tanto esto indica que representa una gran parte de la variabilidad en los datos. Esto es consistente con la proporción de varianza de 0.890, lo que significa que el PC1 explica el 89% de la variabilidad en los datos.  PC2 tiene una desviación estándar mucho menor (1.6894) y una proporción de varianza de 0.0453, explicando solo el 4.53% de la variabilidad en los datos. La **proporción acumulada** muestra que después de las primeras 10 componentes principales (PC), ya se ha explicado más del 99% de la variabilidad. Por tanto, esto indica que para la mayoría de los análisis, podrías trabajar con solo las primeras 2-3 componentes y aún así capturar casi toda la variabilidad en los datos.
+
+![Scores PCA](https://github.com/Dianaguma/Gutierrez_Martinez_Diana_PEC1/blob/main/pca_scores.csv)
 
 
 # Conclusiones 
@@ -176,8 +180,3 @@ El **Oxoglutarato**, **succinato**, y **acetato**: Son metabolitos involucrados 
 la **acetona**: En situaciones de caquexia, puede haber una mayor utilización de los cuerpos cetónicos para la producción de energía debido a la disminución de los carbohidratos disponibles, y la acetona es uno de esos productos. La acumulación de cetonas podría reflejar un cambio hacia la utilización de las grasas para obtener energía y esto es lo que ocurre en la caquexia.
 
 Aminoácidos como la alanina, glutamina, leucina y valina: En la caquexia, la pérdida de masa muscular se asocia con un catabolismo aumentado de las proteínas, lo que libera aminoácidos. La glutamina juega un papel fundamental en el metabolismo celular y en el mantenimiento de la función inmune, pero también es un indicador de la degradación muscular. La correlación de la glutamina con otros metabolitos podría reflejar un intento del cuerpo de compensar la pérdida muscular y la alteración del metabolismo energético. La alanina es un aminoácido que se produce durante la glucólisis y tiene un papel crucial en el transporte de energía entre los músculos y el hígado, y sus niveles elevados en condiciones de caquexia podrían reflejar un metabolismo alterado de proteínas y glucosa. La leucina es un aminoácido esencial que está involucrado en la síntesis de proteínas musculares, y su correlación con otros metabolitos podría estar indicando intentos del cuerpo por estimular la síntesis proteica para contrarrestar la pérdida de masa muscular.
-
-# Reflexiones sobre las limitaciones del análisis y posibles estudios futuros.
-
-
-
