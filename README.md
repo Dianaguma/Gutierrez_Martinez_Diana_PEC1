@@ -1,6 +1,6 @@
 # Gutierrez_Martinez_Diana_PEC1
 
-# Análisis Exploratorio de Datos y Construcción del SummarizedExperiment"#
+# Análisis Exploratorio de Datos y Construcción del SummarizedExperiment"
 Diana Gutierrez Martínez
 •	Fecha: 29/03/2025
 •	UOC
