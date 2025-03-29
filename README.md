@@ -166,6 +166,9 @@ La alanina es un aminoácido que se produce durante la glucólisis y tiene un pa
 
 La leucina es un aminoácido esencial que está involucrado en la síntesis de proteínas musculares, y su correlación con otros metabolitos podría estar indicando intentos del cuerpo por estimular la síntesis proteica para contrarrestar la pérdida de masa muscular.
 
+# Analisis de PCA
+PC1 tiene una desviación estándar significativamente mayor (7.488), por tanto esto indica que representa una gran parte de la variabilidad en los datos. Esto es consistente con la proporción de varianza de 0.890, lo que significa que el PC1 explica el 89% de la variabilidad en los datos.  PC2 tiene una desviación estándar mucho menor (1.6894) y una proporción de varianza de 0.0453, explicando solo el 4.53% de la variabilidad en los datos. La **proporción acumulada** muestra que después de las primeras 10 componentes principales (PC), ya se ha explicado más del 99% de la variabilidad. Por tanto, esto indica que para la mayoría de los análisis, podrías trabajar con solo las primeras 2-3 componentes y aún así capturar casi toda la variabilidad en los datos.
+
 
 # Conclusiones 
 
