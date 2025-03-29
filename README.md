@@ -1,4 +1,4 @@
-# Gutierrez_Martinez_Diana_PEC1
+# Gutierrez-Martinez-Diana-PEC1
 
 # Análisis Exploratorio de Datos y Construcción del SummarizedExperiment
 Diana Gutierrez Martínez
