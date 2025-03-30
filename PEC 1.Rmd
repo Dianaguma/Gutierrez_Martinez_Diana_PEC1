@@ -18,36 +18,90 @@ lapply(required_packages, library, character.only = TRUE)
 data <- read.csv("C:/Users/merma/OneDrive/Escritorio/MASTER BIOINFORMATICA/analisis de datos omicos/Gutiérrez -Martínez -Diana-PEC1/human_cachexia.csv")
 
 # Extraer los metadatos y datos experimentales
+# Explicación de los codigos : Este código selecciona dos columnas del data y las guarda en el objeto sample_data. 
 sample_data <- data[, c("Patient.ID", "Muscle.loss")]
+
 sample_data$Muscle.loss <- factor(sample_data$Muscle.loss)
+# He convertido la columna Muscle.loss en un factor
+
+# Quiero seleccionar todas las filas pero excluir las columnas 1 y 2.
+
 exp_data <- data[, -(1:2)]
 data_matrix <- as.matrix(exp_data)
 
 # Asegurar que los nombres de fila están asignados correctamente
+
 rownames(data_matrix) <- sample_data$Patient.ID
+
+# Quiero eliminar las filas del data frame sample_data que tengan valores duplicados en la columna Patient.ID.
 sample_data <- sample_data[!duplicated(sample_data$Patient.ID), ]
+
+# Elimino las filas del objeto data_matrix (una matriz) que tengan nombres de fila duplicados.
 data_matrix <- data_matrix[!duplicated(rownames(data_matrix)), ]
+
+# Quiero encontrar los Patient.ID que están presentes tanto en sample_data como en data_matrix
 common_ids <- intersect(sample_data$Patient.ID, rownames(data_matrix))
+
+# Filtro el sample_data para que solo contenga las filas cuyos Patient.ID están presentes en common_ids
 sample_data <- sample_data[sample_data$Patient.ID %in% common_ids, ]
+
+# Filtro data_matrix para que solo contenga las filas cuyos nombres de fila coinciden con los common_ids.
 data_matrix <- data_matrix[rownames(data_matrix) %in% common_ids, ]
 
-# Crear el objeto SummarizedExperiment
+# Y creo el objeto SummarizedExperiment
 se <- SummarizedExperiment(assays = list(counts = data_matrix), colData = sample_data)
 
-# Guardar el objeto SummarizedExperiment
+# Guardo el objeto SummarizedExperiment
 save(se, file = "C:/Users/merma/OneDrive/Escritorio/MASTER BIOINFORMATICA/analisis de datos omicos/Gutiérrez -Martínez -Diana-PEC1/SummarizedExperiment_Diana_Gutiérrez.rda")
 
-# Análisis exploratorio de los datos
+# Y hago un análisis exploratorio de los datos
 # Ver los metadatos
-colData(se)
 
-# Realizar un t-test entre los grupos control y cachexic
-muscle_loss <- colData(se)$Muscle.loss
-control_group <- assays(se)$counts[, muscle_loss == "control"]
+colData(se) 
+# asi veo el dataframe con una tabla con los metadatos de las muestras (columnas) en el objeto SummarizedExperiment
+
+summary(se)
+
+# Hacer un t.test
+
+head(se)
+
+muscle_loss <- colData(se)$Muscle.loss  # Esto debería estar alineado con las columnas de la matriz
+
+# Separar los grupos 'control' y 'cachexic'
+control_group <- assays(se)$counts[, muscle_loss == "control"]  # Filtro por columnas
 case_group <- assays(se)$counts[, muscle_loss == "cachexic"]
 
-p_values <- apply(assays(se)$counts, 1, function(x) t.test(x[muscle_loss == "control"], x[muscle_loss == "cachexic"])$p.value)
+sample_data <- sample_data[match(rownames(assays(se)$counts), sample_data$Patient.ID), ]
+
+head(sample_data$Muscle.loss)
+
+p_values <- apply(assays(se)$counts, 1, function(x) {
+  t.test(x[sample_data$Muscle.loss == "control"], x[sample_data$Muscle.loss == "cachexic"])$p.value
+})
+
+head(p_values)
+
 sorted_p_values <- sort(p_values)
+
+print(sorted_p_values)
+
+# Los p-valores son mayores que 0.05, no podemos rechazar la H0 (que afirma  que no hay diferencias entre los grupos). Por tanto, no encontramos evidencia suficiente para decir que los metabolitos analizados difieren significativamente entre los grupos de pacientes cachexicos y controles.
+
+# Calcular y ver la media de cada metabolito
+
+mean_values <- apply(assays(se)$counts, 2, mean) # las medias de los datos. 
+
+sorted_mean_values_desc <- sort(mean_values, decreasing = TRUE)
+
+head(sorted_mean_values_desc, 10) # Ver el encabezado de los datos. 
+
+# Respuesta: La Creatinine tiene el valor más alto de concentración entre los metabolitos estudiados, con 9521.7754, seguido por Hippurate (2614.1479) y Citrate (2423.4689). Esto sugiere que la creatinina podría ser uno de los metabolitos más presentes en las muestras que estás analizando.
+
+
+# Calcular la desviación estándar por metabolito
+sd_per_metabolite <- apply(assays(se)$counts, 2, sd)
+
 
 # Visualización de la correlación
 cor_matrix <- cor(data_matrix, use = "pairwise.complete.obs")
@@ -65,15 +119,29 @@ ggsave("C:/Users/merma/OneDrive/Escritorio/heatmap.png")
 
 # PCA (Análisis de Componentes Principales) 
 pca_result <- prcomp(t(assays(se)$counts), scale = TRUE)
-pca_scores <- pca_result$x
-pca_scores_df <- data.frame(pca_scores)
 
-# Graficar los primeros dos componentes principales (PC1 vs PC2)
+# t(assays(se)$counts): Se realiza una transposición de la matriz de conteos. Porque en el análisis de componentes principales (PCA), cada fila es en este caso, un gen, y cada columna una muestra.
+#prcomp: función de R que realiza el análisis de componentes principales (PCA), descompone la matriz de datos utilizando el método de descomposición en valores singulares. 
+
+pca_scores <- pca_result$x 
+# Asi obtengo los datos de los scores. 
+
+# Que me lo transforme en un dataframe. 
+
+pca_scores_df <- data.frame(pca_scores) 
+write.csv(pca_scores_df, "C:/Users/merma/OneDrive/Escritorio/MASTER BIOINFORMATICA/analisis de datos omicos/Gutiérrez -Martínez -Diana-PEC1/pca_scores.csv") 
+# Guardado en github. 
+
+# Graficar los primeros dos componentes principales (PC1 vs PC2)  en un gráfico de dispersión
+
 ggplot(pca_scores_df, aes(x = PC1, y = PC2)) +
   geom_point() +
   labs(title = "PCA: PC1 vs PC2", x = "PC1", y = "PC2") +
   theme_minimal()
+
 ggsave("C:/Users/merma/OneDrive/Escritorio/pca_plot.png")
+
+# agregado el grafico en github (https://github.com/Dianaguma/Gutierrez_Martinez_Diana_PEC1)
 
 # Varianza explicada y acumulada
 varianza_explicada <- pca_result$sdev^2 / sum(pca_result$sdev^2)
@@ -82,6 +150,11 @@ varianza_acumulada <- cumsum(varianza_explicada)
 varianza_df <- data.frame(PC = paste0("PC", 1:length(varianza_explicada)),
                           Varianza_Explicada = varianza_explicada,
                           Varianza_Acumulada = varianza_acumulada)
+# resultados analizados en el informe. 
+
+write.csv(varianza_df, "C:/Users/merma/OneDrive/Escritorio/MASTER BIOINFORMATICA/analisis de datos omicos/Gutiérrez -Martínez -Diana-PEC1/varianza_explicada.csv", row.names = FALSE) 
+
+# La descargo para ponerla en github. 
 
 ggplot(varianza_df, aes(x = PC)) +
   geom_bar(aes(y = Varianza_Explicada), stat = "identity", fill = "blue", alpha = 0.6) +
@@ -91,12 +164,16 @@ ggplot(varianza_df, aes(x = PC)) +
   scale_y_continuous(sec.axis = sec_axis(~./max(varianza_explicada), name = "Proporción Acumulada"))
 ggsave("C:/Users/merma/OneDrive/Escritorio/varianza_explicada.png", width = 10, height = 6, dpi = 300)
 
-# Extraer y guardar los resultados del PCA
+# Extraer y guardar los resultados del PCA y adjuntar al github. 
 write.csv(pca_scores_df, file = "C:/Users/merma/OneDrive/Escritorio/pca_scores.csv")
+
 
 # Correlación filtrada y gráfico de la red de metabolitos
 threshold <- 0.7
 cor_matrix_filtered <- cor_matrix
+
+# abs: obtener el valor absoluto de  en este caso una matriz. 
+
 cor_matrix_filtered[abs(cor_matrix_filtered) < threshold] <- 0
 g <- graph_from_adjacency_matrix(cor_matrix_filtered, weighted = TRUE, mode = "undirected")
 png("C:/Users/merma/OneDrive/Escritorio/grafico_correlacion.png", width = 800, height = 800)
