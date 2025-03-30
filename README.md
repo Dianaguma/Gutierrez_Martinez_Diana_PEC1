@@ -163,4 +163,8 @@ En conclusión, los metabolitos analizados, como la **creatinina**, **pi-Methylh
 - (1)(https://chemevol.web.uah.es/wp/la-enzima-de-las-mil-caras-el-complejo-2-oxoglutarato-deshidrogenasa/?print=print)
 - (2)Ciclo de Krebs (https://www.studocu.com/latam/document/universidad-tecnologica-de-santiago/bioquimica-i/cap-16-ciclo-de-krebs-harpers-bioquimica-ilustrada-30a-edicion/8335805)
 
+  # Anexos
+  
+- Resumen de ruta metabolica (https://github.com/Dianaguma/Gutierrez_Martinez_Diana_PEC1/blob/main/Captura%20de%20pantalla.png)
+
 
