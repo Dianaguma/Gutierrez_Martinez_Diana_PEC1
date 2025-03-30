@@ -7,15 +7,15 @@ date: "2025-03-26"
 
 ```{r}
 
-# Instalar y cargar los paquetes necesarios
+options(repos = c(CRAN = "https://cran.rstudio.com/"))
 
-```{r}
 # Cargar las librerías necesarias
 install.packages("usethis")
 library(usethis)
 
 # Configurar GitHub remoto (opcional, solo si es necesario para tu proyecto)
 use_git_remote(url = "https://github.com/Dianaguma/Gutierrez_Martinez_Diana_PEC1/tree/main", overwrite = TRUE)
+
 
 # Seleccionar un mirror de CRAN
 chooseCRANmirror(graphics = FALSE, ind = 1)
@@ -161,6 +161,9 @@ colnames(assays(se)$counts) # nombres de los metabolitos (columnas de los ensayo
 
 se$`Muscle loss`
 
+print(se$`Muscle loss`)
+
+
 # Vamos a hacer analisis gráficos 
 
 install.packages("ggplot2")     # Para visualización
@@ -209,7 +212,6 @@ ggplot(cor_data, aes(Var1, Var2, fill = value)) +
        x = "Metabolito", 
        y = "Metabolito")
 
-![Mapa de calor](https://github.com/Dianaguma/Gutierrez_Martinez_Diana_PEC1/blob/main/heatmap.png)
 
 # Ver la distribución de las categorías de "Muscle.loss"
 table(sample_data$Muscle.loss)
@@ -225,11 +227,11 @@ ggplot(sample_data, aes(x = Muscle.loss)) +
 
 ```
 
+![Mapa de calor](https://github.com/Dianaguma/Gutierrez_Martinez_Diana_PEC1/raw/main/heatmap.png)
 
+![Varianza explicada](https://github.com/Dianaguma/Gutierrez_Martinez_Diana_PEC1/raw/main/varianza_explicada.png)
 
-![Heatmap](C:/Users/merma/OneDrive/Escritorio/heatmap.png)
-![Varianza explicada](C:/Users/merma/OneDrive/Escritorio/varianza_explicada.png)
-![Varianza explicada](C:/Users/merma/OneDrive/Escritorio/grafico_correlacion.png)
+![Varianza explicada](https://github.com/Dianaguma/Gutierrez_Martinez_Diana_PEC1/raw/main/grafico_correlacion.png)
 
 Promedio de concentraciones de metabolitos (ordenados de mayor a menor): Aqui observamos la Creatinina y el citrato con valores altos, como tambien el hipurato. 
 
@@ -244,4 +246,4 @@ Promedio de concentraciones de metabolitos (ordenados de mayor a menor): Aqui ob
 - **pi-Methylhistidine**: 391.5184
 - **Glutamine**: 337.0968
 
-
+# Conclusion: la Creatinina y pi-Methylhistidine hemos vistoo valores de 9521.7754 y 391.5184 de media. Oxoglutarato, succinato y acetato están involucrados en la producción de energía, especialmente a través del ciclo de Krebs. Por esta razon hemos visto fuertes correlaciones entre ellos. Ya que alteraciones en estos metabolitos sugieren una disfunción metabólica, donde el cuerpo intenta compensar la falta de energía utilizando vías alternativas, como la oxidación de ácidos grasos, lo que refleja un cambio en el metabolismo energético típico de la caquexia. Finalmente, los aminoácidos como alanina, glutamina, leucina, y valina están estrechamente relacionados con la degradación y síntesis de proteínas musculares. La presencia elevada de estos aminoácidos es indicativa de un estado catabólico donde el cuerpo busca compensar la pérdida muscular mediante la movilización de reservas de aminoácidos. 
