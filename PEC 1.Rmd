@@ -6,252 +6,102 @@ date: "2025-03-26"
 
 
 ```{r}
+# Cargar las librerías necesarias, asegurando que estén instaladas
+required_packages <- c("usethis", "BiocManager", "readr", "ggplot2", "dplyr", "patchwork", "GGally", "tidyr", "reshape2", "igraph", "KEGGREST")
 
-options(repos = c(CRAN = "https://cran.rstudio.com/"))
+new_packages <- required_packages[!(required_packages %in% installed.packages()[,"Package"])]
+if(length(new_packages)) install.packages(new_packages)
 
-# Cargar las librerías necesarias
-install.packages("usethis")
-library(usethis)
+lapply(required_packages, library, character.only = TRUE)
 
-# Configurar GitHub remoto (opcional, solo si es necesario para tu proyecto)
-use_git_remote(url = "https://github.com/Dianaguma/Gutierrez_Martinez_Diana_PEC1/tree/main", overwrite = TRUE)
-
-
-# Seleccionar un mirror de CRAN
-chooseCRANmirror(graphics = FALSE, ind = 1)
-
-# Instalar y cargar BiocManager para paquetes de Bioconductor
-install.packages("BiocManager")
-BiocManager::install("SummarizedExperiment")
-
-# Instalar y cargar readr para manejo de archivos CSV
-install.packages("readr")
-library(SummarizedExperiment)
-library(readr)
-
-# Leer el archivo CSV con la ruta completa
+# Leer los datos CSV
 data <- read.csv("C:/Users/merma/OneDrive/Escritorio/MASTER BIOINFORMATICA/analisis de datos omicos/Gutiérrez -Martínez -Diana-PEC1/human_cachexia.csv")
 
-# Separar los metadatos (por ejemplo, Patient ID y Muscle loss)
+# Extraer los metadatos y datos experimentales
 sample_data <- data[, c("Patient.ID", "Muscle.loss")]
-
-View(data)
-
-# Convertir "Muscle_loss" en factor
 sample_data$Muscle.loss <- factor(sample_data$Muscle.loss)
-
-# Eliminar filas con NA en los metadatos
-sample_data <- sample_data[complete.cases(sample_data), ]
-
-# Separar los datos experimentales (mediciones de metabolitos)
-exp_data <- data[, -(1:2)]  # Eliminamos las primeras dos columnas (metadatos)
-
-# Convertir los datos experimentales a matriz
+exp_data <- data[, -(1:2)]
 data_matrix <- as.matrix(exp_data)
 
-print(data_matrix)
-
-# matriz o conjunto de datos que lista varios metabolitos o compuestos bioquímicos junto con sus concentraciones correspondientes. Cada fila representa una muestra, y cada columna corresponde a un metabolito diferente. Los valores en la tabla representan los niveles de concentración de cada metabolito en cada muestra. El conjunto de datos parece contener muchos metabolitos involucrados en diferentes vías metabólicas, como aminoácidos, ácidos orgánicos y otros compuestos bioquímicos. Estos compuestos pueden ser importantes para estudios relacionados con el metabolismo, la bioquímica o cualquier área donde el perfil metabólico sea relevante.
-
-# Verificar que los nombres de fila están vacíos o incorrectos
-if (is.null(rownames(data_matrix)) || length(rownames(data_matrix)) == 0) {
-  cat("Asignando los nombres de fila a data_matrix...\n")
-  
-  # Comprobamos que los IDs en sample_data coinciden con las filas de data_matrix
-  if (length(sample_data$Patient.ID) == nrow(data_matrix)) {
-    rownames(data_matrix) <- sample_data$Patient.ID
-  } else {
-    stop("El número de filas en sample_data no coincide con el número de filas en data_matrix.")
-  }
-}
-
-# Verificar los nombres de las filas
-cat("Comprobando los nombres de fila...\n")
-print(head(rownames(data_matrix)))  # Muestra los primeros nombres de fila
-
-# > print(head(rownames(data_matrix)))  # Muestra los primeros nombres de fila[1] "PIF_178"     "PIF_087"     "PIF_090"     "NETL_005_V1" "PIF_115"     "PIF_110"  
-
-
-
-# Verificar si hay duplicados en Patient.ID y eliminarlos
+# Asegurar que los nombres de fila están asignados correctamente
+rownames(data_matrix) <- sample_data$Patient.ID
 sample_data <- sample_data[!duplicated(sample_data$Patient.ID), ]
 data_matrix <- data_matrix[!duplicated(rownames(data_matrix)), ]
-
-# Asegurar que solo se mantienen IDs comunes entre sample_data y data_matrix
 common_ids <- intersect(sample_data$Patient.ID, rownames(data_matrix))
-
-# Filtrar ambas estructuras para mantener solo las IDs en común
 sample_data <- sample_data[sample_data$Patient.ID %in% common_ids, ]
 data_matrix <- data_matrix[rownames(data_matrix) %in% common_ids, ]
 
-# Asegurar que las filas en data_matrix y sample_data están alineadas
-cat("Alineando filas de data_matrix y sample_data...\n")
-
-# Usamos match para encontrar las filas en el orden correcto
-order_indices <- match(sample_data$Patient.ID, rownames(data_matrix))
-
-# Verificar si todos los IDs de sample_data están presentes en rownames(data_matrix)
-if (any(is.na(order_indices))) {
-  cat("Advertencia: Algunos Patient.ID de sample_data no están presentes en rownames(data_matrix).\n")
-}
-
-# Reordenar ambas estructuras según el índice obtenido con match
-data_matrix <- data_matrix[order_indices, ]
-sample_data <- sample_data[order_indices, ]
-
-# Verificar nuevamente las dimensiones
-cat("Dimensiones de sample_data:", dim(sample_data), "\n")
-# Dimensiones de la sample_data 77 y 2
-
-cat("Dimensiones de data_matrix:", dim(data_matrix), "\n")
-
-#Dimensiones de data_matrix: 77 63
-
 # Crear el objeto SummarizedExperiment
-se <- SummarizedExperiment(
-  assays = list(counts = data_matrix),
-  colData = sample_data
-)
+se <- SummarizedExperiment(assays = list(counts = data_matrix), colData = sample_data)
 
-# Ver el objeto SummarizedExperiment
-se
-
-
-# Resultado al mostrar el summarizedExperiment: 
-# class: SummarizedExperiment 
-#dim: 63 63 
-#metadata(0):
-#assays(1): counts
-#rownames(63): PIF_178 PIF_087 ... NETCR_008_V1 NETCR_008_V2
-#rowData names(1): MuscleLoss
-#colnames(63): 1,6-Anhydro-beta-D-glucose 1-Methylnicotinamide ...
-#  pi-Methylhistidine tau-Methylhistidine
-#colData names(2): Patient ID Muscle loss
-
+# Guardar el objeto SummarizedExperiment
 save(se, file = "C:/Users/merma/OneDrive/Escritorio/MASTER BIOINFORMATICA/analisis de datos omicos/Gutiérrez -Martínez -Diana-PEC1/SummarizedExperiment_Diana_Gutiérrez.rda")
 
-# Así agrego un archivo Rda que agregaré a github de los summarizedExperiment
-
-url <- "https://github.com/Dianaguma/Gutierrez_Martinez_Diana_PEC1/raw/main/SummarizedExperiment_Diana_Guti%C3%A9rrez.rda"
-
-# Aqui tengo el archivo summarizedExperiment en el github con los demas archivos. 
-
-
-# 3. Llevad a cabo un análisis exploratorio que os proporcione una visión general del dataset en la línea de lo que hemos visto en las actividades de este reto
-
+# Análisis exploratorio de los datos
+# Ver los metadatos
 colData(se)
 
-metabolite_data <- assays(se)$counts  # mirar los estadisticos de se. 
+# Realizar un t-test entre los grupos control y cachexic
+muscle_loss <- colData(se)$Muscle.loss
+control_group <- assays(se)$counts[, muscle_loss == "control"]
+case_group <- assays(se)$counts[, muscle_loss == "cachexic"]
 
-# Especifica la ruta completa del directorio donde deseas guardar el archivo CSV
-directorio <- "C:/Users/merma/OneDrive/Escritorio/MASTER BIOINFORMATICA/analisis de datos omicos/Gutiérrez -Martínez -Diana-PEC1"
+p_values <- apply(assays(se)$counts, 1, function(x) t.test(x[muscle_loss == "control"], x[muscle_loss == "cachexic"])$p.value)
+sorted_p_values <- sort(p_values)
 
-# Guarda el archivo CSV en el directorio especificado
-write.csv(metabolite_data, file.path(directorio, "metabolite_data.csv"), row.names = TRUE)
-
-# |                             **Patient ID**  | **Muscle loss** |
-# |----------------------------------------------|-----------------|
-# | 1,6-Anhydro-beta-D-glucose                   | cachexic        |
-# | 1-Methylnicotinamide                         | cachexic        |
-# | 2-Aminobutyrate                              | cachexic        |
-# | 2-Hydroxyisobutyrate                         | cachexic        |
-# | 2-Oxoglutarate                               | cachexic        |
-# | ...                                          | ...             |
-# | cis-Aconitate                                | control         |
-# | myo-Inositol                                 | control         |
-# | trans-Aconitate                              | control         |
-# | pi-Methylhistidine                           | control         |
-# | tau-Methylhistidine                          | control         |
-
-# Explicacion: Coldata:muestra los metadatos correspondientes a las columnas del objeto SummarizedExperiment, que en este caso contienen los IDs de pacientes y si estos pacientes presentan pérdida muscular (Muscle loss).
-
-colnames(assays(se)$counts) # nombres de los metabolitos (columnas de los ensayos):nombres de las columnas de los datos experimentales (en este caso, las concentraciones de metabolitos u otros datos cuantitativos) almacenados dentro de un objeto SummarizedExperiment (se).
-
-se$`Muscle loss`
-
-print(se$`Muscle loss`)
-
-
-# Vamos a hacer analisis gráficos 
-
-install.packages("ggplot2")     # Para visualización
-install.packages("dplyr")       # Para manipulación de datos
-install.packages("patchwork")   # Para combinar gráficos
-install.packages("GGally")      # Para análisis de correlación
-
-# Cargar librerías necesarias
-library(ggplot2)
-library(tidyr)
-
-# Calcular la correlación entre los metabolitos
-
+# Visualización de la correlación
 cor_matrix <- cor(data_matrix, use = "pairwise.complete.obs")
-
-print(cor_matrix)
-
-# Resultado lo guardo para colocarlo en el github 
-
-cor_matrix <- cor(data_matrix, use = "pairwise.complete.obs")
-
-# Guardar la matriz de correlación en la ruta específica
 write.csv(cor_matrix, "C:/Users/merma/OneDrive/Escritorio/MASTER BIOINFORMATICA/analisis de datos omicos/Gutiérrez -Martínez -Diana-PEC1/correlation_matrix.csv")
 
-# la agrego en github. 
-
-url <- "https://github.com/Dianaguma/Gutierrez_Martinez_Diana_PEC1/blob/main/correlation_matrix.csv"
-
-# Visualizar la matriz de correlación
-library(reshape2)
-
-# Convertir la matriz de correlación a formato largo
+# Visualizar la matriz de correlación con un mapa de calor
 cor_data <- melt(cor_matrix)
-
-
-# Mapa de calor de la correlación entre metabolitos
 ggplot(cor_data, aes(Var1, Var2, fill = value)) +
   geom_tile() +
-  scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
-                       midpoint = 0, limit = c(-1, 1), space = "Lab", 
-                       name = "Correlación") +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white", midpoint = 0, limit = c(-1, 1)) +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, 
-                                   hjust = 1)) +
-  labs(title = "Mapa de calor de la correlación entre metabolitos",
-       x = "Metabolito", 
-       y = "Metabolito")
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +
+  labs(title = "Mapa de calor de la correlación entre metabolitos", x = "Metabolito", y = "Metabolito")
+ggsave("C:/Users/merma/OneDrive/Escritorio/heatmap.png")
 
+# PCA (Análisis de Componentes Principales) 
+pca_result <- prcomp(t(assays(se)$counts), scale = TRUE)
+pca_scores <- pca_result$x
+pca_scores_df <- data.frame(pca_scores)
 
-# Ver la distribución de las categorías de "Muscle.loss"
-table(sample_data$Muscle.loss)
-
-library(ggplot2)
-
-ggplot(sample_data, aes(x = Muscle.loss)) +
-  geom_bar(fill = "skyblue", color = "black") +
-  labs(title = "Distribución de muestras por grupo", x = "Grupo", y = "Frecuencia") +
+# Graficar los primeros dos componentes principales (PC1 vs PC2)
+ggplot(pca_scores_df, aes(x = PC1, y = PC2)) +
+  geom_point() +
+  labs(title = "PCA: PC1 vs PC2", x = "PC1", y = "PC2") +
   theme_minimal()
+ggsave("C:/Users/merma/OneDrive/Escritorio/pca_plot.png")
 
-# No es distribución homogenea. 
+# Varianza explicada y acumulada
+varianza_explicada <- pca_result$sdev^2 / sum(pca_result$sdev^2)
+varianza_acumulada <- cumsum(varianza_explicada)
+
+varianza_df <- data.frame(PC = paste0("PC", 1:length(varianza_explicada)),
+                          Varianza_Explicada = varianza_explicada,
+                          Varianza_Acumulada = varianza_acumulada)
+
+ggplot(varianza_df, aes(x = PC)) +
+  geom_bar(aes(y = Varianza_Explicada), stat = "identity", fill = "blue", alpha = 0.6) +
+  geom_line(aes(y = Varianza_Acumulada * max(varianza_explicada), group = 1), color = "red", linewidth = 1) +
+  labs(title = "Varianza Explicada y Acumulada por los Componentes Principales", x = "Componente Principal", y = "Proporción de Varianza / Acumulada") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  scale_y_continuous(sec.axis = sec_axis(~./max(varianza_explicada), name = "Proporción Acumulada"))
+ggsave("C:/Users/merma/OneDrive/Escritorio/varianza_explicada.png", width = 10, height = 6, dpi = 300)
+
+# Extraer y guardar los resultados del PCA
+write.csv(pca_scores_df, file = "C:/Users/merma/OneDrive/Escritorio/pca_scores.csv")
+
+# Correlación filtrada y gráfico de la red de metabolitos
+threshold <- 0.7
+cor_matrix_filtered <- cor_matrix
+cor_matrix_filtered[abs(cor_matrix_filtered) < threshold] <- 0
+g <- graph_from_adjacency_matrix(cor_matrix_filtered, weighted = TRUE, mode = "undirected")
+png("C:/Users/merma/OneDrive/Escritorio/grafico_correlacion.png", width = 800, height = 800)
+plot(g, vertex.label = rownames(cor_matrix_filtered), vertex.size = 5, edge.width = E(g)$weight * 5)
+dev.off()
+
 
 ```
-
-![Mapa de calor](https://github.com/Dianaguma/Gutierrez_Martinez_Diana_PEC1/raw/main/heatmap.png)
-
-![Varianza explicada](https://github.com/Dianaguma/Gutierrez_Martinez_Diana_PEC1/raw/main/varianza_explicada.png)
-
-![Varianza explicada](https://github.com/Dianaguma/Gutierrez_Martinez_Diana_PEC1/raw/main/grafico_correlacion.png)
-
-Promedio de concentraciones de metabolitos (ordenados de mayor a menor): Aqui observamos la Creatinina y el citrato con valores altos, como tambien el hipurato. 
-
-- **Creatinine**: 9521.7754
-- **Hippurate**: 2614.1479
-- **Citrate**: 2423.4689
-- **Glycine**: 950.9063
-- **Trimethylamine N-oxide**: 700.7406
-- **Glucose**: 657.2894
-- **Taurine**: 571.7576
-- **Dimethylamine**: 393.1835
-- **pi-Methylhistidine**: 391.5184
-- **Glutamine**: 337.0968
-
-# Conclusion: la Creatinina y pi-Methylhistidine hemos vistoo valores de 9521.7754 y 391.5184 de media. Oxoglutarato, succinato y acetato están involucrados en la producción de energía, especialmente a través del ciclo de Krebs. Por esta razon hemos visto fuertes correlaciones entre ellos. Ya que alteraciones en estos metabolitos sugieren una disfunción metabólica, donde el cuerpo intenta compensar la falta de energía utilizando vías alternativas, como la oxidación de ácidos grasos, lo que refleja un cambio en el metabolismo energético típico de la caquexia. Finalmente, los aminoácidos como alanina, glutamina, leucina, y valina están estrechamente relacionados con la degradación y síntesis de proteínas musculares. La presencia elevada de estos aminoácidos es indicativa de un estado catabólico donde el cuerpo busca compensar la pérdida muscular mediante la movilización de reservas de aminoácidos. 
