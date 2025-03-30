@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Análisis Exploratorio de Datos - PEC1</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+    h1, h2, h3 {
+      color: #333;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    pre {
+      background: #f4f4f4;
+      border-left: 5px solid #333;
+      padding: 10px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    a {
+      color: #1a73e8;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .code {
+      background: #eef;
+      padding: 10px;
+      border-radius: 5px;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>PEC1 - Análisis Exploratorio de Datos y Construcción del SummarizedExperiment</h1>
+    <h2>Autora: Diana Gutierrez Martínez</h2>
+    <p>Fecha: 29/03/2025 - UOC</p>
+    <p>
+      Archivo: <a href="https://github.com/Dianaguma/Gutierrez_Martinez_Diana_PEC1/blob/main/human_cachexia.csv" target="_blank">human_cachexia.csv</a>
+    </p>
+    <h3>Introducción</h3>
+    <p>
+      El análisis de datos ómicos se ha vuelto fundamental para entender los procesos biológicos detrás de diversas enfermedades y condiciones físicas. Dado que estos estudios involucran grandes cantidades de datos complejos, como los perfiles de metabolitos en diferentes contextos, es necesario utilizar estructuras de datos sofisticadas para gestionar y analizar la información de manera efectiva. El rol del bioinformático es esencial para interpretar y analizar metadatos asociados y obtener conclusiones significativas.
+    </p>
+    <h3>Objetivo del Análisis</h3>
+    <p>
+      Evaluar las concentraciones de diversos metabolitos para identificar posibles biomarcadores de condiciones clínicas y metabólicas en los pacientes con cachexia.
+    </p>
+    <h3>Selección y Justificación del Dataset</h3>
+    <p>
+      El dataset proviene del repositorio <a href="https://github.com/nutrimetabolomics/metaboData" target="_blank">nutrimetabolomics/metaboData</a>. Contiene datos sobre concentraciones de metabolitos en pacientes, incluyendo información sobre pérdida muscular (Muscle loss) y una serie de metabolitos relacionados con el metabolismo energético y la función muscular. Los metabolitos incluidos son relevantes porque están involucrados en vías metabólicas que afectan la síntesis de proteínas, el balance energético y el funcionamiento muscular, proporcionando posibles biomarcadores y objetivos terapéuticos.
+    </p>
+    <h3>Incorporación de los Datos a SummarizedExperiment</h3>
+    <p>
+      Utilicé R Studio para crear un archivo SummarizedExperiment, una estructura moderna que facilita el manejo de datos ómicos. Se integraron los metadatos y datos experimentales (mediciones de metabolitos) para formar el objeto SummarizedExperiment, almacenando datos de concentraciones de metabolitos y metadatos clínicos (como IDs de pacientes y pérdida muscular).
+    </p>
+    <h3>Exploración del Objeto SummarizedExperiment</h3>
+    <p>Características del objeto creado:</p>
+    <pre class="code">
+    class: SummarizedExperiment
+    dim: 63 x 63
+    assays(1): counts
+    rownames(63): PIF_178 PIF_087 ... NETCR_008_V1 NETCR_008_V2
+    rowData names(1): MuscleLoss
+    colnames(63): 1,6-Anhydro-beta-D-glucose ... tau-Methylhistidine
+    colData names(2): Patient ID, Muscle loss
+    </pre>
+    <p>
+      Este objeto contiene 63 filas (pacientes) y 63 columnas (metabolitos), permitiendo analizar la relación entre la pérdida muscular y las concentraciones de metabolitos.
+    </p>
+    <h3>Análisis Exploratorio</h3>
+    <p>
+      El análisis de las concentraciones de metabolitos muestra que algunos, como la creatinina, están elevados en pacientes con cachexia. Esto puede ser un indicador importante de la descomposición muscular, característica de esta condición. También se observaron correlaciones significativas entre ciertos metabolitos, como succinato y oxoglutarato, involucrados en el ciclo de Krebs y el metabolismo energético.
+    </p>
+    <h3>Correlaciones</h3>
+    <p>
+      Se calcularon las correlaciones entre metabolitos, observando que ácidos como succinato y oxoglutarato tienen relaciones estrechas, al igual que otros compuestos relacionados con el metabolismo de grasas. Las correlaciones reflejan patrones clave en el metabolismo energético de pacientes cachexicos.
+    </p>
+    <h3>Conclusiones</h3>
+    <p>
+      En resumen, los metabolitos analizados, como la creatinina y pi-Methylhistidine, ofrecen una visión clara del estado metabólico en la caquexia. Las correlaciones observadas entre compuestos clave indican disfunciones metabólicas características de la enfermedad, proporcionando información valiosa para identificar biomarcadores de la pérdida muscular.
+    </p>
+    <h3>Bibliografía</h3>
+    <ul>
+      <li><a href="https://chemevol.web.uah.es/wp/la-enzima-de-las-mil-caras-el-complejo-2-oxoglutarato-deshidrogenasa/?print=print" target="_blank">2-oxoglutarato deshidrogenasa - UAH</a></li>
+      <li><a href="https://www.studocu.com/latam/document/universidad-tecnologica-de-santiago/bioquimica-i/cap-16-ciclo-de-krebs-harpers-bioquimica-ilustrada-30a-edicion/8335805" target="_blank">Ciclo de Krebs - Harper's Bioquímica Ilustrada</a></li>
+    </ul>
+  </div>
+</body>
+</html>
