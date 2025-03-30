@@ -141,6 +141,14 @@ url <- "https://github.com/Dianaguma/Gutierrez_Martinez_Diana_PEC1/raw/main/Summ
 
 colData(se)
 
+metabolite_data <- assays(se)$counts  # mirar los estadisticos de se. 
+
+# Especifica la ruta completa del directorio donde deseas guardar el archivo CSV
+directorio <- "C:/Users/merma/OneDrive/Escritorio/MASTER BIOINFORMATICA/analisis de datos omicos/Gutiérrez -Martínez -Diana-PEC1"
+
+# Guarda el archivo CSV en el directorio especificado
+write.csv(metabolite_data, file.path(directorio, "metabolite_data.csv"), row.names = TRUE)
+
 # |                             **Patient ID**  | **Muscle loss** |
 # |----------------------------------------------|-----------------|
 # | 1,6-Anhydro-beta-D-glucose                   | cachexic        |
