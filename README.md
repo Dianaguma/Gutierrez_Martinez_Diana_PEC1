@@ -22,7 +22,9 @@ Evaluar las concentraciones de diversos metabolitos para identificar posibles bi
 
 # Selección y Justificación del Dataset 
 
-El dataset proviene del repositorio nutrimetabolomics/metaboData en GitHub y contiene datos sobre concentraciones de metabolitos en pacientes, incluyendo información sobre la pérdida muscular (Muscle loss) y diversos metabolitos relacionados con el metabolismo energético y la función muscular. Las principales variables del dataset incluyen identificadores de pacientes (Patient ID), pérdida muscular y una serie de metabolitos que pueden proporcionar información sobre el estado metabólico de los individuos. Los metabolitos incluidos, como Anhydro-β-D-glucose, Methylnicotinamide, Aminobutyrate, entre otros, son relevantes porque están involucrados en vías metabólicas que afectan la síntesis de proteínas, el balance energético y el funcionamiento muscular. La medición de estos metabolitos puede ayudar a entender mejor los cambios metabólicos en la caquexia, una condición caracterizada por la pérdida de masa muscular y debilidad, a menudo observada en enfermedades crónicas como el cáncer y la insuficiencia cardíaca, proporcionando posibles biomarcadores de diagnóstico y objetivos terapéuticos.
+El dataset proviene del repositorio nutrimetabolomics/metaboData en GitHub y contiene datos sobre concentraciones de metabolitos en 77 pacientes, 47 con cachexia y 30 controles , incluyendo información sobre la pérdida muscular (Muscle loss) y diversos metabolitos relacionados con el metabolismo energético y la función muscular. Las principales variables del dataset incluyen identificadores de pacientes (Patient ID), pérdida muscular y una serie de metabolitos que pueden proporcionar información sobre el estado metabólico de los individuos. 
+
+Los metabolitos incluidos, como Anhydro-β-D-glucose, Methylnicotinamide, Aminobutyrate, entre otros, son relevantes porque están involucrados en vías metabólicas que afectan la síntesis de proteínas, el balance energético y el funcionamiento muscular. La medición de estos metabolitos puede ayudar a entender mejor los cambios metabólicos en la caquexia, una condición caracterizada por la pérdida de masa muscular y debilidad, a menudo observada en enfermedades crónicas como el cáncer y la insuficiencia cardíaca, proporcionando posibles biomarcadores de diagnóstico y objetivos terapéuticos.
 
 # Incorporación de los Datos a SummarizedExperiment 
 
@@ -61,13 +63,15 @@ Vemos que los **Metadatos (metadata(0))**: Significa qu no hay metadatos adicion
 **(rownames(63))**: Las filas pertenecen a los pacientes, con identificadores como PIF_178, PIF_087, etc. IDs de los pacientes de la base de datos que se utilizaron en el análisis.
 
 Datos de las filas (rowData names(1): MuscleLoss): La variable rowData tiene una sola columna, llamada MuscleLoss, que indica la pérdida de masa muscular en cada paciente.
+
 Nombres de las columnas (colnames(63)): Las columnas corresponden a los **metabolitos medidos**, como 1,6-Anhydro-beta-D-glucose, 1-Methylnicotinamide, etc. Estas mediciones pueden ser importantes para entender cómo varía el metabolismo entre pacientes con diferente grado de pérdida muscular. Datos de las columnas (colData names(2): Patient ID, Muscle loss): El **slot colData** contiene dos columnas: Patient ID: El identificador de cada paciente. Muscle loss: El grado de pérdida de masa muscular para cada paciente. Este es el factor principal en el estudio de la caquexia, por lo que este dato es esencial para cualquier análisis correlacionando los metabolitos con la severidad de la enfermedad.
 
 # Análisis Exploratorio de los Datos 
 
 **Estadísticas descriptivas: análisis inicial para obtener una visión general del dataset.**
 Podemos hacer un analisis inicial para poder ver una vision general de los datos entrando directamente al archivo rda. Y con el codigo: 
-colData(se) # Vemos que efectivamente estan las dos variables Patient ID y Muscle loss y nos sale los metabolitos relacionados a la cachexia y a este proyecto. 
+colData(se) # Vemos que efectivamente estan las dos variables Patient ID y Muscle loss y nos sale los metabolitos relacionados a la cachexia y a este proyecto. Han separado 2 grupos: los controles y pacientes con cachexia. 
+
                     DataFrame with 63 rows and 2 columns
                                                  Patient ID Muscle loss
                                                 <character>    <factor>
@@ -118,6 +122,21 @@ Miramos las condiciones de cada paciente relacionadas a la massa muscular :
           [61] control  control  control 
           Levels: cachexic control
 
+# Ver la distribución de las categorías de "Muscle.loss"G
+
+Genero una tabla de frecuencias de la variable Muscle.loss y luego creo un gráfico de barras para visualizar cómo se distribuyen los valores de esa variable. Efectivamente **no hay distribución homogenea**. 
+
+          table(sample_data$Muscle.loss)
+          
+          library(ggplot2)
+          
+          ggplot(sample_data, aes(x = Muscle.loss)) +
+            geom_bar(fill = "skyblue", color = "black") +
+            labs(title = "Distribución de muestras por grupo", x = "Grupo", y = "Frecuencia") +
+            theme_minimal()
+
+
+
 # Me enfoco en mirar las estadisticas descriptivas: 
 
 Al hacer un  **summary(assays(se)$counts)** Si nos enfocamos en los resultados de los metabolitos obtengo en general una gran variabilidad en sus concentraciones. Si nos enfocamos en el citrato y la creatinina, vemos que estan mucho más elevados en comparación con otros. Estos valores son importantes en el análisis de condiciones fisiológicas y pueden ser claves en estudios relacionados con el metabolismo y patologías como la cachexia. En la tabla de los resúmenes estadísticos, las estadísticas clave incluyen el valor mínimo, primer cuartil (Q1), mediana (Q2), media, tercer cuartil (Q3) y valor máximo para cada metabolito. En el caso de **1,6-Anhydro-beta-D-glucose** , los valores muestran una gran variabilidad, con un rango muy amplio entre el mínimo y el máximo, el minimo es 4.71 y el máximo es 685.40. Esto ocurre tambien con **1-Methylnicotinamide** con un mínimo de 6.42 y un maximo de 1032.77, mostrando una variablidad con un máximo mucho más alta. 
@@ -157,6 +176,19 @@ Miro tambien la media de cada metabolito y observo que la **Creatinine** tiene e
 # Hago mapa de calor de la correlación entre metabolitos
 
 Instalo el paquete igraph y cargo el paquete. Estableces un umbral (threshold) de 0.7. Este valor se usará para filtrar las correlaciones. Hago una copia de la matriz de correlación original (cor_matrix) y la asigno a una nueva variable llamada cor_matrix_filtered. Modifico **cor_matrix_filtered** estableciendo a cero todas las correlaciones cuya magnitud sea menor que 0.7. Por tanto las correlaciones débiles se eliminan, dejando solo aquellas con correlaciones fuertes (mayores o iguales a 0.7 o menores o iguales a -0.7). Creo un mapa de correlación y guardo ese gráfico en un archivo PNG en mi escritorio. 
+
+                    ggplot(cor_data, aes(Var1, Var2, fill = value)) +
+                      geom_tile() +
+                      scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
+                                           midpoint = 0, limit = c(-1, 1), space = "Lab", 
+                                           name = "Correlación") +
+                      theme_minimal() +
+                      theme(axis.text.x = element_text(angle = 45, vjust = 1, 
+                                                       hjust = 1)) +
+                      labs(title = "Mapa de calor de la correlación entre metabolitos",
+                           x = "Metabolito", 
+                           y = "Metabolito")
+
 
 ![Mapa de calor](https://github.com/Dianaguma/Gutierrez_Martinez_Diana_PEC1/blob/main/heatmap.png)
 
