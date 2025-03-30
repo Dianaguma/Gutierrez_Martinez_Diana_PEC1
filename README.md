@@ -200,10 +200,27 @@ En este mapa de calor los colores reflejan la fuerza de las correlaciones, donde
 En el gráfico de correlación, el citrato y la glutamina están cerca el uno del otro, conectados, lo que indica que están relacionados. El citrato es un compuesto clave en el ciclo de Krebs, que es el proceso que las células usan para obtener energía; en situaciones como la caquexia, que es una pérdida de peso extrema y debilidad muscular, el metabolismo energético del cuerpo se ve alterado. Esto puede hacer que los niveles de citrato cambien, ya que el cuerpo intenta producir más energía de lo normal para compensar el desequilibrio. La glutamina es un aminoácido muy importante para mantener el funcionamiento energético de las células y para la síntesis de proteínas, como las que forman los músculos. En la caquexia, el cuerpo descompone rápidamente las proteínas, lo que provoca una disminución de la glutamina; además, la glutamina ayuda al sistema inmunológico, que también puede verse afectado durante la enfermedad. Cuando en tu gráfico el citrato y la glutamina están muy cerca y correlacionados positivamente, es decir, tienden a aumentar o disminuir juntos, esto podría sugerir que ambos están siendo influenciados por el mismo proceso metabólico en la caquexia. En otras palabras, cuando el cuerpo necesita más energía, lo que puede suceder cuando hay un estado catabólico o de descomposición de tejidos, el citrato y la glutamina están trabajando juntos para tratar de mantener el equilibrio energético y protegen el cuerpo de los efectos del catabolismo acelerado. Por lo tanto, la correlación positiva entre citrato y glutamina en este contexto indica que ambos están involucrados en una respuesta metabólica similar cuando el cuerpo enfrenta un déficit de energía o una pérdida de masa muscular.
 
 # Analisis de PCA
-PC1 tiene una desviación estándar significativamente mayor (7.488), por tanto esto indica que representa una gran parte de la variabilidad en los datos. Esto es consistente con la proporción de varianza de 0.890, lo que significa que el PC1 explica el 89% de la variabilidad en los datos.  PC2 tiene una desviación estándar mucho menor (1.6894) y una proporción de varianza de 0.0453, explicando solo el 4.53% de la variabilidad en los datos. La **proporción acumulada** muestra que después de las primeras 10 componentes principales (PC), ya se ha explicado más del 99% de la variabilidad. Por tanto, esto indica que para la mayoría de los análisis, podrías trabajar con solo las primeras 2-3 componentes y aún así capturar casi toda la variabilidad en los datos.
+
+El procedimiento es el siguiente: 
+
+El primer paso que hago es estandarizar los datos, así cada variable tiene media 0 y desviación estándar 1. Cálculo de la matriz de covarianza o correlación y calculo los vectores propios y los valores propios de la matriz de covarianza. Proyecto datos sobre los componentes principales. Y tengo en cuenta los primeros dos componentes (PC1 y PC2) porque son los más relevantes para la visualización, ya que explican la mayor parte de la variabilidad en los datos.
+        pca_result <- prcomp(t(assays(se)$counts), scale = TRUE)
+        
+        # t(assays(se)$counts): Se realiza una transposición de la matriz de conteos. Porque en el análisis de componentes principales (PCA), cada fila es en este caso, un gen, y cada columna una muestra.
+        #prcomp: función de R que realiza el análisis de componentes principales (PCA), descompone la matriz de datos utilizando el método de descomposición en valores singulares. 
+        
+        pca_scores <- pca_result$x 
+
+      # https://github.com/Dianaguma/Gutierrez_Martinez_Diana_PEC1/blob/main/pca_scores.csv Aquí estan los scores de pca. 
+
+Puedo concluir que PC1 tiene una desviación estándar significativamente mayor (7.488), por tanto esto indica que representa una gran parte de la variabilidad en los datos. Esto es consistente con la proporción de varianza de 0.890, lo que significa que el PC1 explica el 89% de la variabilidad en los datos.  PC2 tiene una desviación estándar mucho menor (1.6894) y una proporción de varianza de 0.0453, explicando solo el 4.53% de la variabilidad en los datos. La **proporción acumulada** muestra que después de las primeras 10 componentes principales (PC), ya se ha explicado más del 99% de la variabilidad. Por tanto, esto indica que para la mayoría de los análisis, podrías trabajar con solo las primeras 2-3 componentes y aún así capturar casi toda la variabilidad en los datos.
+
 
 ![Scores PCA](https://github.com/Dianaguma/Gutierrez_Martinez_Diana_PEC1/blob/main/pca_scores.csv)
 
+Finalmente genero un gráfico de dispersión de los primeros dos componentes principales (PC1 vs. PC2), lo que permite identificar patrones, agrupaciones o posibles anomalías en los datos. Los puntos en el gráfico representan las muestras y su distribución puede revelar patrones biológicos interesantes, como agrupaciones de muestras similares.
+
+![PCA plot](https://github.com/Dianaguma/Gutierrez_Martinez_Diana_PEC1/blob/main/pca_plot.png)
 
 # Conclusiones 
 
