@@ -124,7 +124,7 @@ Al hacer un  **summary(assays(se)$counts)** Si nos enfocamos en los resultados d
 
 # Primero calculo la corrección entre los metabolitos 
 
-Observo que los ácidos como el **succinato**, el **oxoglutarato** y el **ácido acético** tienen fuertes correlaciones entre ellos. Se que están involucrados en las rutas metabólicas relacionadas con el ciclo de Krebs, lo que indica una estrecha relación en la producción de energía.
+Observo que los ácidos como el **succinato**, el **oxoglutarato** y el **ácido acético** tienen fuertes correlaciones entre ellos. Se que están involucrados en las rutas metabólicas relacionadas con el ciclo de Krebs, lo que indica una estrecha relación en la producción de energía.  2-oxoglutarato deshidrogenasa se trata de un complejo multienzimático que forma parte del ciclo de Krebs. Se encarga de transformar el 2-oxoglutarato en succinil-coenzima A (1). Este succinil-coA sale del succinato y la coenzima A. Por eso vemos fuertes correlaciones entre los dos compuestos. 
 
 En cambio la **acetona**, el **ácido acético**, y el **ácido adipato** tienen correlaciones significativas, sabemos que se relacionan entre si porque son metabolitos conectados con la utilización de grasas o la producción de cuerpos cetónicos, cuando estamos en ayuno o metabolismo alterado. 
 
@@ -160,6 +160,7 @@ PC1 tiene una desviación estándar significativamente mayor (7.488), por tanto 
 En conclusión, los metabolitos analizados, como la **creatinina**, **pi-Methylhistidine**, **oxoglutarato**, **succinato**, **acetato**, y los **aminoácidos** (alanina, glutamina, leucina, y valina) ofrecen una visión integral del complejo estado metabólico presente en la caquexia. Creatinina y pi-Methylhistidine reflejan la descomposición muscular, un proceso central en la caquexia, que se caracteriza por la pérdida acelerada de masa muscular. Niveles elevados de estos metabolitos indican un catabolismo de proteínas aumentado, lo cual es un claro indicador de daño y pérdida de tejido muscular, como hemos visto en los resultados del calculo la media de los metabolitos la  **Creatinina** y **pi-Methylhistidine** hemos vistoo valores de **9521.7754** y **391.5184** de media.  **Oxoglutarato**, **succinato** y **acetato** están involucrados en la producción de energía, especialmente a través del ciclo de Krebs. Por esta razon hemos visto fuertes correlaciones entre ellos. Ya que alteraciones en estos metabolitos sugieren una disfunción metabólica, donde el cuerpo intenta compensar la falta de energía utilizando vías alternativas, como la oxidación de ácidos grasos, lo que refleja un cambio en el metabolismo energético típico de la caquexia. Finalmente, los aminoácidos como **alanina, glutamina, leucina**, y **valina** están estrechamente relacionados con la degradación y síntesis de proteínas musculares. La presencia elevada de estos aminoácidos es indicativa de un estado catabólico donde el cuerpo busca compensar la pérdida muscular mediante la movilización de reservas de aminoácidos. Además, estos metabolitos ayudan a mantener funciones críticas como la respuesta inmune y la regulación de la síntesis proteica, aunque su efectividad es limitada debido a las condiciones catabólicas.
 
 # Bibliografia 
-
+- (1)(https://chemevol.web.uah.es/wp/la-enzima-de-las-mil-caras-el-complejo-2-oxoglutarato-deshidrogenasa/?print=print)
+- (2)Ciclo de Krebs (https://www.studocu.com/latam/document/universidad-tecnologica-de-santiago/bioquimica-i/cap-16-ciclo-de-krebs-harpers-bioquimica-ilustrada-30a-edicion/8335805)
 
 
