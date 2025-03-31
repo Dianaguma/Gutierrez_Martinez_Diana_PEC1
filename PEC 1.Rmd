@@ -102,6 +102,19 @@ head(sorted_mean_values_desc, 10) # Ver el encabezado de los datos.
 # Calcular la desviación estándar por metabolito
 sd_per_metabolite <- apply(assays(se)$counts, 2, sd)
 
+      
+# Tabla de frecuencias de la variable Muscle.loss 
+
+table(sample_data$Muscle.loss) # Aquí veo que la distribución no es homogenea. 
+      
+      library(ggplot2)
+      
+      ggplot(sample_data, aes(x = Muscle.loss)) +
+        geom_bar(fill = "skyblue", color = "black") +
+        labs(title = "Distribución de muestras por grupo", x = "Grupo", y = "Frecuencia") +
+        theme_minimal()
+
+
 
 # Visualización de la correlación
 cor_matrix <- cor(data_matrix, use = "pairwise.complete.obs")
